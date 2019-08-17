@@ -1,3 +1,14 @@
+# Auto color temp adjust widget
+autoclrtemp:
+  name: "Auto color temp"
+  entities:
+    - input_boolean.color_morning_enabled
+    - input_datetime.morning_start_time
+    - input_datetime.morning_end_time
+    - input_boolean.color_night_enabled
+    - input_datetime.night_start_time
+    - input_datetime.night_end_time
+
 # Wake up lights widget
 alarm_clock:
   name: "Wake-up Lights"

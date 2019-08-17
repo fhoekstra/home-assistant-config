@@ -38,6 +38,15 @@ views:
         entity: weather.fc_raven
       - type: media-control
         entity: media_player.living_room
+      - type: entities
+        entities:
+          - input_boolean.color_morning_enabled
+          - input_datetime.morning_start_time
+          - input_datetime.morning_end_time
+          - input_boolean.color_night_enabled
+          - input_datetime.night_start_time
+          - input_datetime.night_end_time
+        title: "Auto color temp"
       - type: custom:light-entity-card
         entity: light.keuken
         persist_features: true

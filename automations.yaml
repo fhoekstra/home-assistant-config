@@ -55,6 +55,6 @@
   action:
   - data_template:
       kelvin: 4000
-      transition: 20
-      entity_id: light.nachtkastje
+      transition: 300 # 5 minutes fade-in time
+      entity_id: light.slaapkamer
     service: script.fade_in_ikea_light

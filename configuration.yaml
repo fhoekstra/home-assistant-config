@@ -34,6 +34,13 @@ input_datetime:
     has_date: false
     #initial: "07:20" # uncomment to reset the value at restart
 
+# Light groups
+light:
+  - platform: group
+    name: slaapkamer
+    entities:
+      - light.nachtkastje
+      - light.slaapkamer_plafond
 
 group: !include groups.yaml
 automation: !include automations.yaml

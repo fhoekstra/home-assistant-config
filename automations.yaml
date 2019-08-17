@@ -32,4 +32,29 @@
       kelvin: 2200
     service: script.turn_on_ikea_light
 
-
+- alias: "Wake-me up using bedroom lights"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.wakeup_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    - condition: state
+      entity_id: input_boolean.wakeup_enabled
+      state: 'on'
+    - condition: or # One of the conditions below must be true
+      conditions:
+        - condition: state # Will be true when the switch is 'on'
+          entity_id: input_boolean.wakeup_weekend
+          state: 'on'
+        - condition: time # Will be true on weekdays
+          weekday:
+            - mon
+            - tue
+            - wed
+            - thu
+            - fri
+  action:
+  - data_template:
+      kelvin: 4000
+      transition: 20
+      entity_id: light.nachtkastje
+    service: script.fade_in_ikea_light

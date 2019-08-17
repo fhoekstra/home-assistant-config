@@ -1,0 +1,14 @@
+# Wake up lights widget
+alarm_clock:
+  name: "Wake-up Lights"
+  entities: # Add all entities here that should be part of the widget
+    - input_datetime.wakeup_time
+    - input_boolean.wakeup_enabled
+    - input_boolean.wakeup_weekend
+
+slaapkamer:  # I cannot pass this as an entity_id to turn on lights I think?
+  name: "Slaapkamer"
+  entities:
+    - light.nachtkastje
+    - light.slaapkamer_plafond
+    

@@ -1,0 +1,4 @@
+# Time sensor
+- platform: time_date
+  display_options:
+    - 'time'

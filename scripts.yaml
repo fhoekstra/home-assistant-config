@@ -17,3 +17,18 @@ turn_on_ikea_light:
         entity_id: "{{ entity_id }}"
         brightness_pct: "{{ brightness_pct }}"
         #transition: 0.3
+
+fade_in_ikea_light: # Is this broken?
+  alias: 'Fade-in IKEA light'
+  sequence:
+    - service: script.turn_on_ikea_light
+      data_template:
+        entity_id: "{{ entity_id }}"
+        kelvin: "{{ kelvin }}" # Start at specified temperature
+        brightness_pct: "1" # Start at lowest brightness
+
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness_pct: "100" # Transition to full brightness
+        transition: "{{ transition }}" # time in seconds

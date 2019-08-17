@@ -2,14 +2,40 @@
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
+
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
+
 
 # Text to speech
 tts:
   - platform: google_translate
 
+
+# Wake-up lights input
+
+## Enable? Also on weekends?
+input_boolean :
+  wakeup_enabled:
+    name: "Wake-up lights"
+    #initial: on
+    icon: mdi:theme-light-dark
+  wakeup_weekend:
+    name: "Enable Wake-up on weekends"
+    #initial: off # I disable the system on default on weekends,# uncomment to reset the value at restart
+    icon: mdi:calendar-blank
+
+## Wake up lights at what time?
+input_datetime:
+  wakeup_time:
+    name: "Start lights at"
+    has_time: true
+    has_date: false
+    #initial: "07:20" # uncomment to reset the value at restart
+
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+sensor: !include sensors.yaml

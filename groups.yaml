@@ -5,10 +5,4 @@ alarm_clock:
     - input_datetime.wakeup_time
     - input_boolean.wakeup_enabled
     - input_boolean.wakeup_weekend
-
-slaapkamer:  # I cannot pass this as an entity_id to turn on lights I think?
-  name: "Slaapkamer"
-  entities:
-    - light.nachtkastje
-    - light.slaapkamer_plafond
     

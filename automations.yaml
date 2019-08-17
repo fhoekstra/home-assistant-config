@@ -1,7 +1,7 @@
 - id: '1565175229743'
   alias: WC avond bij aanzetten
   trigger:
-  - entity_id: light.wc_lamp
+  - entity_id: light.wc
     platform: state
     to: 'on'
   condition:
@@ -11,14 +11,14 @@
   action:
   - data_template:
       brightness_pct: 2
-      entity_id: light.wc_lamp
+      entity_id: light.wc
       kelvin: 2200
     service: script.turn_on_ikea_light
 
 - id: '1565175229745'
   alias: Gang avond bij aanzetten
   trigger:
-  - entity_id: light.gang_lamp
+  - entity_id: light.gang
     platform: state
     to: 'on'
   condition:
@@ -28,7 +28,7 @@
   action:
   - data_template:
       brightness_pct: 30
-      entity_id: light.gang_lamp
+      entity_id: light.gang
       kelvin: 2200
     service: script.turn_on_ikea_light
 

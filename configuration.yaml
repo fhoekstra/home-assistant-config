@@ -41,6 +41,22 @@ light:
     entities:
       - light.nachtkastje
       - light.slaapkamer_plafond
+  - platform: group
+    name: woonkamer
+    entities:
+      - light.bureau
+      - light.keuken_deurkant
+      - light.keuken_koelkastkant
+  - platform: group
+    name: keuken
+    entities:
+      - light.keuken_deurkant
+      - light.keuken_koelkastkant
+
+
+lovelace: # make UI editable in YAML files for custom cards
+  mode: yaml
+
 
 group: !include groups.yaml
 automation: !include automations.yaml

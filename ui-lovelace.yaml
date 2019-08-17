@@ -1,0 +1,57 @@
+title: FC Raven
+resources:
+  - url: /local/light-entity-card.js
+    type: js
+views:
+  - path: default_view
+    title: Home
+    badges:
+      - sensor.time
+      - sun.sun
+    cards:
+      - type: custom:light-entity-card
+        entity: light.woonkamer
+        persist_features: true
+      - type: custom:light-entity-card
+        entity: light.slaapkamer
+        persist_features: true
+      - type: custom:light-entity-card
+        entity: light.gang
+        persist_features: true
+      - type: custom:light-entity-card
+        entity: light.wc
+        persist_features: true
+      - type: custom:light-entity-card
+        entity: light.nachtkastje
+        persist_features: true
+      - type: custom:light-entity-card
+        entity: light.slaapkamer_plafond
+        persist_features: true
+      - type: entities
+        entities:
+          - input_datetime.wakeup_time
+          - input_boolean.wakeup_enabled
+          - input_boolean.wakeup_weekend
+        title: Wake-up Lights
+        show_header_toggle: true
+      - type: weather-forecast
+        entity: weather.fc_raven
+      - type: media-control
+        entity: media_player.living_room
+      - type: custom:light-entity-card
+        entity: light.keuken
+        persist_features: true
+      - type: custom:light-entity-card
+        entity: light.bureau
+        persist_features: true
+      - type: entities
+        entities:
+          - automation.wc_avond_bij_aanzetten
+          - automation.wake_me_up_using_bedroom_lights
+          - automation.gang_avond_bij_aanzetten
+        title: Automation
+      - type: entities
+        entities:
+          - script.fade_in_ikea_light
+          - script.turn_on_ikea_light
+        title: Script

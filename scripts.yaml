@@ -1,0 +1,19 @@
+turn_on_ikea_light:
+  alias: 'Turn On IKEA light'
+  sequence:
+    # Check whether the light is off (optional)
+    #- condition: template
+    #  value_template: "{{ is_state(entity, 'off') }}"
+    #- delay: '00:00:01'
+    # Set the color temperature.
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        kelvin: "{{ kelvin }}"
+    #- delay: '00:00:01'
+    # Set the brightness of the lights.
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness_pct: "{{ brightness_pct }}"
+        #transition: 0.3

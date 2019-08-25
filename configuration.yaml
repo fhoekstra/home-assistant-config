@@ -73,6 +73,8 @@ light:
 lovelace: # make UI editable in YAML files for custom cards
   mode: yaml
 
+python_script:  # python scripts folder
+
 
 group: !include groups.yaml
 automation: !include automations.yaml

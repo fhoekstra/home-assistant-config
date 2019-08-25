@@ -1,3 +1,65 @@
+- alias: "Auto color temperature"
+  id: '1565175229731'
+  trigger:
+  - platform: template  # Morning time
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_start_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  - platform: template  # Evening time
+    value_template: "{{ states('sensor.time') == (states.input_datetime.early_eve_start_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  - platform: template  # Night time
+    value_template: "{{ states('sensor.time') == (states.input_datetime.night_start_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  - platform: state  # Light turns on
+    entity_id: light.wc
+    to: 'on'
+  - platform: state
+    entity_id: light.bureau
+    to: 'on'
+  - platform: state  # Light turns on
+    entity_id: light.gang
+    to: 'on'
+  - platform: state  # Light turns on
+    entity_id: light.keuken_deurkant
+    to: 'on'
+  - platform: state  # Light turns on
+    entity_id: light.keuken_koelkastkant
+    to: 'on'
+  - platform: state  # Light turns on
+    entity_id: light.nachtkastje
+    to: 'on'
+  - platform: state  # Light turns on
+    entity_id: light.slaapkamer_plafond
+    to: 'on'
+  action:
+  - service: python_script.hello
+    data_template:
+      trigger: "{{trigger}}"
+
+- alias: "Wake-me up using bedroom lights"
+  id: '1565175229733'
+  trigger:
+  - platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.wakeup_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    - condition: state
+      entity_id: input_boolean.wakeup_enabled
+      state: 'on'
+    - condition: or  # One of the conditions below must be true
+      conditions:
+        - condition: state  # Will be true when the switch is 'on'
+          entity_id: input_boolean.wakeup_weekend
+          state: 'on'
+        - condition: time  # Will be true on weekdays
+          weekday:
+            - mon
+            - tue
+            - thu  # Wednesday is a weekend day for us
+            - fri
+  action:
+  - data_template:
+      kelvin: 4000
+      transition: 300 # 5 minutes fade-in time
+      entity_id: light.slaapkamer
+    service: script.fade_in_ikea_light
+
 - id: '1565175229743'
   alias: WC avond bij aanzetten
   trigger:
@@ -31,31 +93,3 @@
       entity_id: light.gang
       kelvin: 2200
     service: script.turn_on_ikea_light
-
-- alias: "Wake-me up using bedroom lights"
-  id: '1565175229733'
-  trigger:
-    platform: template
-    value_template: "{{ states('sensor.time') == (states.input_datetime.wakeup_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
-  condition:
-    - condition: state
-      entity_id: input_boolean.wakeup_enabled
-      state: 'on'
-    - condition: or # One of the conditions below must be true
-      conditions:
-        - condition: state # Will be true when the switch is 'on'
-          entity_id: input_boolean.wakeup_weekend
-          state: 'on'
-        - condition: time # Will be true on weekdays
-          weekday:
-            - mon
-            - tue
-            - wed
-            - thu
-            - fri
-  action:
-  - data_template:
-      kelvin: 4000
-      transition: 300 # 5 minutes fade-in time
-      entity_id: light.slaapkamer
-    service: script.fade_in_ikea_light

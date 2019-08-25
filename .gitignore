@@ -1,0 +1,16 @@
+*
+*/
+
+secrets.*
+secrets.yaml
+
+.storage/
+.storage/*
+
+!automations.yaml
+!configuration.yaml
+!groups.yaml
+!scripts.yaml
+!sensors.yaml
+!ui-lovelace.yaml
+#!/www/

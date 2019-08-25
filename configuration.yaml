@@ -22,14 +22,10 @@ input_boolean :
     name: "Enable Wake-up on weekends"
     #initial: off # I disable the system on default on weekends,# uncomment to reset the value at restart
     icon: mdi:calendar-blank
-  color_morning_enabled:
-    name: "Auto Morning Color"
+  auto_color_enabled:
+    name: "Auto Color Enabled"
     initial: on
     icon: mdi:weather-sunset
-  color_night_enabled:
-    name: "Auto Night Color"
-    initial: on  # comment to keep value after restart
-    icon: mdi:weather-night
 
 input_datetime:
   wakeup_time:
@@ -42,21 +38,16 @@ input_datetime:
     has_time: true
     has_date: false
     initial: "06:24" # uncomment to reset the value at restart
-  morning_end_time:
-    name: "End morning at"
+  early_eve_start_time:
+    name: "Start evening at"
     has_time: true
     has_date: false
-    initial: "11:30"
+    initial: "18:00"
   night_start_time:
     name: "Start night at"
     has_time: true
     has_date: false
     initial: "20:00"
-  night_end_time:
-    name: "End night at"
-    has_time: true
-    has_date: false
-    initial: "06:00"
 
 
 # Light groups

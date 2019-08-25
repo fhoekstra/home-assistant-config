@@ -33,6 +33,7 @@
     service: script.turn_on_ikea_light
 
 - alias: "Wake-me up using bedroom lights"
+  id: '1565175229733'
   trigger:
     platform: template
     value_template: "{{ states('sensor.time') == (states.input_datetime.wakeup_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"

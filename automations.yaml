@@ -46,11 +46,10 @@
         - condition: state # Will be true when the switch is 'on'
           entity_id: input_boolean.wakeup_weekend
           state: 'on'
-        - condition: time # Will be true on weekdays
+        - condition: time
           weekday:
             - mon
             - tue
-            - wed
             - thu
             - fri
   action:

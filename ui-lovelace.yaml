@@ -56,6 +56,8 @@ views:
           - automation.wc_avond_bij_aanzetten
           - automation.wake_me_up_using_bedroom_lights
           - automation.gang_avond_bij_aanzetten
+          - automation.auto_color_temperature_trigger_on_turn_on
+          - automation.auto_color_temperature_trigger_on_time
         title: Automation
       - type: entities
         entities:

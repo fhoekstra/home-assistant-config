@@ -1,60 +1,68 @@
-- id: '1565175229743'
-  alias: WC avond bij aanzetten
+- id: '1565175229729'
+  alias: Auto color temperature - trigger on time
   trigger:
-  - entity_id: light.wc
+  - entity_id: sensor.timeofday
     platform: state
-    to: 'on'
   condition:
-  - after: '19:30'
-    before: 06:00
-    condition: time
+  - condition: state
+    entity_id: input_boolean.auto_color_enabled
+    state: 'on'
   action:
   - data_template:
-      brightness_pct: 2
-      entity_id: light.wc
-      kelvin: 2200
-    service: script.turn_on_ikea_light
-
-- id: '1565175229745'
-  alias: Gang avond bij aanzetten
-  trigger:
-  - entity_id: light.gang
-    platform: state
-    to: 'on'
-  condition:
-  - after: '19:30'
-    before: 06:00
-    condition: time
-  action:
-  - data_template:
-      brightness_pct: 30
-      entity_id: light.gang
-      kelvin: 2200
-    service: script.turn_on_ikea_light
-
-- alias: "Wake-me up using bedroom lights"
+      timeofday: '{{states.sensor.timeofday.state}}'
+    service: python_script.act_time
+- alias: Wake-me up using bedroom lights
   id: '1565175229733'
   trigger:
-    platform: template
-    value_template: "{{ states('sensor.time') == (states.input_datetime.wakeup_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (states.input_datetime.morning_start_time.attributes.timestamp
+      | int | timestamp_custom(''%H:%M'', False)) }}'
   condition:
+  - condition: state
+    entity_id: input_boolean.wakeup_enabled
+    state: 'on'
+  - condition: or
+    conditions:
     - condition: state
-      entity_id: input_boolean.wakeup_enabled
+      entity_id: input_boolean.wakeup_weekend
       state: 'on'
-    - condition: or # One of the conditions below must be true
-      conditions:
-        - condition: state # Will be true when the switch is 'on'
-          entity_id: input_boolean.wakeup_weekend
-          state: 'on'
-        - condition: time
-          weekday:
-            - mon
-            - tue
-            - thu
-            - fri
+    - condition: time
+      weekday:
+      - mon
+      - tue
+      - thu
+      - fri
   action:
   - data_template:
       kelvin: 4000
-      transition: 300 # 5 minutes fade-in time
+      transition: 300
       entity_id: light.slaapkamer
     service: script.fade_in_ikea_light
+- id: '1566761726209'
+  alias: slaapkamer_slecht_bezig
+  trigger:
+  - entity_id: light.slaapkamer_plafond
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.nachtkastje
+    state: 'off'
+  action:
+  - data:
+      entity_id: light.slaapkamer_plafond
+    service: light.turn_off
+- id: '1566763763348'
+  alias: Welterusten
+  trigger:
+  - entity_id: light.slaapkamer
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - after: '22:00'
+    before: 05:00
+    condition: time
+  action:
+  - service: light.turn_off

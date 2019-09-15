@@ -2,3 +2,22 @@
 - platform: time_date
   display_options:
     - 'time'
+# Period of day sensor
+- platform: template
+  sensors:
+    timeofday:
+      friendly_name: Time of day
+      entity_id: sensor.time, input_datetime.morning_start_time, input_datetime.early_eve_start_time, input_datetime.night_start_time
+      value_template: >
+        {% set d = now().strftime("%Y-%m-%d ") %}
+        {% set t = now().timestamp() %}
+        {% set morning_start = strptime(d + states('input_datetime.morning_start_time'), '%Y-%m-%d %H:%M:%S').timestamp() %}
+        {% set evening_start = strptime(d + states('input_datetime.early_eve_start_time'), '%Y-%m-%d %H:%M:%S').timestamp() %}
+        {% set night_start = strptime(d + states('input_datetime.night_start_time'), '%Y-%m-%d %H:%M:%S').timestamp() %}
+        {% if morning_start <= t < evening_start  %}
+          Day
+        {% elif evening_start <= t < night_start %}
+          Evening
+        {% else %}
+          Night
+        {% endif %}

@@ -8,57 +8,43 @@ views:
     badges:
       - sensor.time
       - sun.sun
+      - sensor.timeofday
     cards:
       - type: custom:light-entity-card
         entity: light.woonkamer
-        persist_features: true
+        persist_features: false
       - type: custom:light-entity-card
         entity: light.slaapkamer
-        persist_features: true
-      - type: custom:light-entity-card
-        entity: light.gang
-        persist_features: true
-      - type: custom:light-entity-card
-        entity: light.wc
-        persist_features: true
-      - type: custom:light-entity-card
-        entity: light.nachtkastje
-        persist_features: true
+        persist_features: false
       - type: custom:light-entity-card
         entity: light.slaapkamer_plafond
-        persist_features: true
-      - type: entities
-        entities:
-          - input_datetime.wakeup_time
-          - input_boolean.wakeup_enabled
-          - input_boolean.wakeup_weekend
-        title: Wake-up Lights
-        show_header_toggle: true
-      - type: weather-forecast
-        entity: weather.fc_raven
-      - type: media-control
-        entity: media_player.living_room
+        persist_features: false
       - type: entities
         entities:
           - input_boolean.auto_color_enabled
           - input_datetime.morning_start_time
+          - input_boolean.wakeup_enabled
+          - input_boolean.wakeup_weekend
           - input_datetime.early_eve_start_time
           - input_datetime.night_start_time
-        title: "Auto color temp"
+        title: "Light times"
+        show_header_toggle: true
+      - type: weather-forecast
+        entity: weather.fc_raven
+      - type: custom:light-entity-card
+        entity: light.nachtkastje
+        persist_features: false
+      - type: custom:light-entity-card
+        entity: light.gang
+        persist_features: false
+      - type: custom:light-entity-card
+        entity: light.wc
+        persist_features: false
+      - type: media-control
+        entity: media_player.living_room
       - type: custom:light-entity-card
         entity: light.keuken
-        persist_features: true
+        persist_features: false
       - type: custom:light-entity-card
         entity: light.bureau
-        persist_features: true
-      - type: entities
-        entities:
-          - automation.wc_avond_bij_aanzetten
-          - automation.wake_me_up_using_bedroom_lights
-          - automation.gang_avond_bij_aanzetten
-        title: Automation
-      - type: entities
-        entities:
-          - script.fade_in_ikea_light
-          - script.turn_on_ikea_light
-        title: Script
+        persist_features: false

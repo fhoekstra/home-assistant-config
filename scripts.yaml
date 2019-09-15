@@ -1,34 +1,28 @@
 turn_on_ikea_light:
-  alias: 'Turn On IKEA light'
+  alias: Turn On IKEA light
   sequence:
-    # Check whether the light is off (optional)
-    #- condition: template
-    #  value_template: "{{ is_state(entity, 'off') }}"
-    #- delay: '00:00:01'
-    # Set the color temperature.
-    - service: light.turn_on
-      data_template:
-        entity_id: "{{ entity_id }}"
-        kelvin: "{{ kelvin }}"
-    #- delay: '00:00:01'
-    # Set the brightness of the lights.
-    - service: light.turn_on
-      data_template:
-        entity_id: "{{ entity_id }}"
-        brightness_pct: "{{ brightness_pct }}"
-        #transition: 0.3
-
-fade_in_ikea_light: # Is this broken?
-  alias: 'Fade-in IKEA light'
+  - service: light.turn_on
+    data_template:
+      entity_id: '{{ entity_id }}'
+      kelvin: '{{ kelvin }}'
+  - service: light.turn_on
+    data_template:
+      entity_id: '{{ entity_id }}'
+      brightness_pct: '{{ brightness_pct }}'
+fade_in_ikea_light:
+  alias: Fade-in IKEA light
   sequence:
-    - service: script.turn_on_ikea_light
-      data_template:
-        entity_id: "{{ entity_id }}"
-        kelvin: "{{ kelvin }}" # Start at specified temperature
-        brightness_pct: "1" # Start at lowest brightness
-
-    - service: light.turn_on
-      data_template:
-        entity_id: "{{ entity_id }}"
-        brightness_pct: "100" # Transition to full brightness
-        transition: "{{ transition }}" # time in seconds
+  - service: script.turn_on_ikea_light
+    data_template:
+      entity_id: '{{ entity_id }}'
+      kelvin: '{{ kelvin }}'
+      brightness_pct: '1'
+  - service: light.turn_on
+    data_template:
+      entity_id: '{{ entity_id }}'
+      brightness_pct: '100'
+      transition: '{{ transition }}'
+'1568541800859':
+  alias: wait
+  sequence:
+  - delay: '1'

@@ -28,16 +28,11 @@ input_boolean :
     icon: mdi:weather-sunset
 
 input_datetime:
-  wakeup_time:
-    name: "Start lights at"
-    has_time: true
-    has_date: false
-    #initial: "07:20" # uncomment to reset the value at restart
   morning_start_time:
     name: "Start morning at"
     has_time: true
     has_date: false
-    initial: "06:24" # uncomment to reset the value at restart
+    initial: "07:30" # comment to not reset the value at restart
   early_eve_start_time:
     name: "Start evening at"
     has_time: true

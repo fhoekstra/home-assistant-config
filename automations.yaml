@@ -66,3 +66,17 @@
     condition: time
   action:
   - service: light.turn_off
+    data:
+      entity_id: all
+- id: '1565175229727'
+  alias: 'Telegram turn lights off'
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/lightsoff'
+  condition: []
+  action:
+  - service: light.turn_off
+    data:
+      entity_id: all

@@ -8,7 +8,7 @@ views:
     badges:
       - sensor.time
       - sun.sun
-      - sensor.timeofday
+      - sensor.lightsalarmtomorrow
     cards:
       - type: custom:light-entity-card
         entity: light.woonkamer

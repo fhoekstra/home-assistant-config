@@ -21,3 +21,30 @@
         {% else %}
           Night
         {% endif %}
+    lightsalarmtomorrow:
+      friendly_name: Lights alarm tomorrow
+      entity_id: sensor.time, input_datetime.morning_start_time, input_boolean.wakeup_enabled, input_boolean.wakeup_weekend
+      value_template: >
+        {% set wd = now().weekday() %}
+        {% if states.input_boolean.wakeup_enabled.state == 'on' %}
+          {% if (4 < wd + 1 < 7 or wd + 1 == 2) %}
+            {% if states.input_boolean.wakeup_weekend.state == 'on' %}
+              {% set al = 'on' %}
+            {% else %}
+               {% set al = 'off' %}
+            {% endif %}
+          {% else %}
+            {% set al = 'on' %}
+          {%endif%}
+        {% elif states.input_boolean.wakeup_enabled.state == 'off' %}
+          {% set al = 'off' %}
+        {% else %}
+          Unexpected value for states.input_boolean.wakeup_enabled.state
+        {% endif %}
+        {% if al == 'on' %}
+          {{states.input_datetime.morning_start_time.state[:5]}}
+        {% elif al == 'off' %}
+          {{al}}
+        {% else %}
+          Unexpected value for al
+        {% endif %}

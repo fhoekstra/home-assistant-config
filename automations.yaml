@@ -47,6 +47,9 @@
     to: 'on'
   condition:
   - condition: state
+    entity_id: sensor.timeofday
+    state: '''Night'''
+  - condition: state
     entity_id: light.nachtkastje
     state: 'off'
   action:
@@ -69,12 +72,12 @@
     data:
       entity_id: all
 - id: '1565175229727'
-  alias: 'Telegram turn lights off'
+  alias: Telegram turn lights off
   trigger:
     platform: event
     event_type: telegram_command
     event_data:
-      command: '/lightsoff'
+      command: /lightsoff
   condition: []
   action:
   - service: light.turn_off

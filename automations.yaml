@@ -16,7 +16,7 @@
   trigger:
   - platform: template
     value_template: '{{ states(''sensor.time'') == (states.input_datetime.morning_start_time.attributes.timestamp
-      | int | timestamp_custom(''%H:%M'', False)) }}'
+      | int - int(states.input_number.wakeup_time_transition.state) | timestamp_custom(''%H:%M'', False)) }}'
   condition:
   - condition: state
     entity_id: input_boolean.wakeup_enabled
@@ -34,10 +34,8 @@
       - fri
   action:
   - data_template:
-      kelvin: 4000
-      transition: 300
-      entity_id: light.slaapkamer
-    service: script.fade_in_ikea_light
+      transition: '{{states.input_number.wakeup_time_transition.state}}'
+    service: script.do_wake_up_lights
 - id: '1566761726209'
   alias: slaapkamer_slecht_bezig
   trigger:
@@ -71,6 +69,11 @@
   - service: light.turn_off
     data:
       entity_id: all
+  - service: tts.google_translate_say
+    entity_id: media_player.living_room
+    data:
+      message: 'Welterusten'
+      language: 'nl'
 - id: '1565175229727'
   alias: Telegram turn lights off
   trigger:

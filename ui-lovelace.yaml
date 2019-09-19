@@ -24,6 +24,7 @@ views:
           - input_boolean.wakeup_weekend
           - input_datetime.early_eve_start_time
           - input_datetime.night_start_time
+          - input_number.wakeup_time_transition
         title: "Light times"
         show_header_toggle: true
       - type: weather-forecast

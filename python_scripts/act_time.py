@@ -23,7 +23,7 @@ for li in all_lights:
 
 if not lights:
     logger.warning("act_time.py: could not get any light ids!")
-    
+
 offlights = []
 onlights = []
 for entity_id in lights:
@@ -34,9 +34,9 @@ for entity_id in lights:
         onlights.append(entity_id)
     else:
         logger.warning("act_time.py: weird state "+str(state.state)+" of entity "+str(entity_id))
-    
+
 #logger.info("These lights are off: "+str(offlights))
-                   
+
 # Change color of off lights
 for entity_id in offlights:
     service_data = {'entity_id': entity_id, 'kelvin': timecolor[timeofday]}

@@ -13,4 +13,5 @@ secrets.yaml
 !scripts.yaml
 !sensors.yaml
 !ui-lovelace.yaml
+!python_scripts/*
 #!/www/

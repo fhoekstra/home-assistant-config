@@ -26,3 +26,18 @@ fade_in_ikea_light:
   alias: wait
   sequence:
   - delay: '1'
+do_wake_up_lights:
+  alias: Wake-Up Lights
+  sequence:
+  - service: script.fade_in_ikea_light
+    data_template:
+      entity_id: light.nachtkastje
+      kelvin: 4000
+      transition: '{{ (((transition | float * 60 ) / 2) | int) }}'
+  - delay:
+      seconds: "{{ (((transition | float * 60 ) / 2) | int) }}"
+  - service: script.fade_in_ikea_light
+    data_template:
+      entity_id: light.slaapkamer_plafond
+      kelvin: 4000
+      transition: '{{ (((transition | float * 60 ) / 2) | int) }}'

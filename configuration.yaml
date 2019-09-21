@@ -47,11 +47,11 @@ input_datetime:
 
 input_number:
   wakeup_time_transition:
-    name: "Wake-up lights transition (seconds)"
-    initial: 900
-    min: 60
-    max: 3600
-    step: 60
+    name: "Wake-up lights transition (minutes)"
+    initial: 15
+    min: 5
+    max: 60
+    step: 5
 
 
 # Light groups

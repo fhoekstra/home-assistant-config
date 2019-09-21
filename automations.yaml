@@ -15,8 +15,7 @@
   id: '1565175229733'
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.time'') == (states.input_datetime.morning_start_time.attributes.timestamp
-      | int - int(states.input_number.wakeup_time_transition.state) | timestamp_custom(''%H:%M'', False)) }}'
+    value_template: "{{ (((states.input_datetime.morning_start_time.attributes['timestamp']) - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom('%H:%M', False) ) == ( states.sensor.time.state ) }} " 
   condition:
   - condition: state
     entity_id: input_boolean.wakeup_enabled

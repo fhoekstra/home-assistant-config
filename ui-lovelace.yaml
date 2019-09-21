@@ -18,14 +18,10 @@ views:
         entity: light.slaapkamer_plafond
       - type: entities
         entities:
-          - input_boolean.auto_color_enabled
           - input_datetime.morning_start_time
           - input_boolean.wakeup_enabled
           - input_boolean.wakeup_weekend
-          - input_datetime.early_eve_start_time
-          - input_datetime.night_start_time
-          - input_number.wakeup_time_transition
-        title: "Light times"
+        title: "Wake-up lights"
         show_header_toggle: true
       - type: weather-forecast
         entity: weather.fc_raven
@@ -40,6 +36,13 @@ views:
         persist_features: false
       - type: media-control
         entity: media_player.living_room
+      - type: entities
+        entities:
+          - input_boolean.auto_color_enabled
+          - input_datetime.early_eve_start_time
+          - input_datetime.night_start_time
+          - input_number.wakeup_time_transition
+        title: "Other options"
       - type: custom:light-entity-card
         entity: light.keuken
         persist_features: false

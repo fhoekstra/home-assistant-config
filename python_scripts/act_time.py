@@ -58,7 +58,7 @@ time.sleep(10)
 
 # Start transitioning the color of the on lights
 for entity_id in onlights:
-    service_data = {'entity_id': entity_id, 'kelvin': timecolor[timeofday], 'transition': 600}
+    service_data = {'entity_id': entity_id, 'kelvin': timecolor[timeofday], 'transition': 180}
     hass.services.call('light', 'turn_on', service_data)
     time.sleep(1)
 #logger.info("Done!")

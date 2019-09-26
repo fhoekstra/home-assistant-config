@@ -15,7 +15,9 @@
   id: '1565175229733'
   trigger:
   - platform: template
-    value_template: "{{ (((states.input_datetime.morning_start_time.attributes['timestamp']) - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom('%H:%M', False) ) == ( states.sensor.time.state ) }} " 
+    value_template: '{{ (((states.input_datetime.morning_start_time.attributes[''timestamp''])
+      - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom(''%H:%M'',
+      False) ) == ( states.sensor.time.state ) }} '
   condition:
   - condition: state
     entity_id: input_boolean.wakeup_enabled
@@ -65,23 +67,29 @@
     before: 05:00
     condition: time
   action:
-  - service: light.turn_off
-    data:
+  - data:
       entity_id: all
-  - service: tts.google_translate_say
-    entity_id: media_player.living_room
-    data:
-      message: 'Welterusten'
-      language: 'nl'
+    service: light.turn_off
 - id: '1565175229727'
   alias: Telegram turn lights off
   trigger:
-    platform: event
-    event_type: telegram_command
-    event_data:
+  - event_data:
       command: /lightsoff
+    event_type: telegram_command
+    platform: event
   condition: []
   action:
-  - service: light.turn_off
-    data:
-      entity_id: all
+  - data: {'entity_id': 'all'}
+    service: light.turn_off
+- id: '1565175229111'
+  alias: Update Available Notification
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.updater
+    from: 'off'
+    to: 'on'
+  action:
+  - service: notify.teledobbyme
+    data_template:
+      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
+        }} is available.

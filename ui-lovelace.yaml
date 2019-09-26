@@ -7,6 +7,7 @@ views:
     title: Home
     badges:
       - sensor.time
+      - updater.updater
       - sun.sun
       - sensor.lightsalarmtomorrow
     cards:
@@ -42,7 +43,7 @@ views:
           - input_datetime.early_eve_start_time
           - input_datetime.night_start_time
           - input_number.wakeup_time_transition
-        title: "Other options"
+        title: "Other"
       - type: custom:light-entity-card
         entity: light.keuken
         persist_features: false

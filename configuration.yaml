@@ -13,6 +13,9 @@ tts:
   - platform: google_translate
     language: 'nl'
 
+# detects available updates to home-assistant
+updater:
+  include_used_components: true
 
 input_boolean :
   wakeup_enabled:

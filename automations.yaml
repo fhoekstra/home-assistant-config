@@ -37,6 +37,19 @@
   - data_template:
       transition: '{{states.input_number.wakeup_time_transition.state}}'
     service: script.do_wake_up_lights
+- alias: Wake-me up test numbers
+  id: '1565175229702'
+  trigger:
+  - platform: template
+    value_template: '{{ (((states.input_number.morning_start_hour.state | int * 3600)
+      + (states.input_number.morning_start_minutes.state | int * 60)
+      - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom(''%H:%M'',
+      False)) == ( states.sensor.time.state ) }}'
+  condition: []
+  action:
+  - data_template:
+      transition: '{{states.input_number.wakeup_time_transition.state}}'
+    service: script.do_wake_up_lights
 - id: '1566761726209'
   alias: slaapkamer_slecht_bezig
   trigger:

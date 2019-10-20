@@ -13,10 +13,6 @@ tts:
   - platform: google_translate
     language: 'nl'
 
-# detects available updates to home-assistant
-updater:
-  include_used_components: true
-
 input_boolean :
   wakeup_enabled:
     name: "Wake-up lights"
@@ -55,6 +51,19 @@ input_number:
     min: 5
     max: 60
     step: 5
+  morning_start_hour:
+    name: "Wake-up hour"
+    initial: 8
+    min: 0
+    max: 22
+    step: 1
+  morning_start_minutes:
+    name: "Wake-up min"
+    initial: 0
+    min: 0
+    max: 55
+    step: 5
+
 
 
 # Light groups
@@ -76,8 +85,8 @@ light:
       - light.keuken_deurkant
       - light.keuken_koelkastkant
 
-lovelace: # make UI editable in YAML files for custom cards
-  mode: yaml
+#lovelace: # make UI editable in YAML files for custom cards
+#  mode: yaml
 
 python_script:  # python scripts folder
 

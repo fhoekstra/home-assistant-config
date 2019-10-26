@@ -5,6 +5,8 @@ turn_on_ikea_light:
     data_template:
       entity_id: '{{ entity_id }}'
       kelvin: '{{ kelvin }}'
+  - delay:
+      milliseconds: 500
   - service: light.turn_on
     data_template:
       entity_id: '{{ entity_id }}'
@@ -17,6 +19,8 @@ fade_in_ikea_light:
       entity_id: '{{ entity_id }}'
       kelvin: '{{ kelvin }}'
       brightness_pct: '1'
+  - delay:
+      seconds: 5
   - service: light.turn_on
     data_template:
       entity_id: '{{ entity_id }}'

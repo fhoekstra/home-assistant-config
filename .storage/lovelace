@@ -4,17 +4,15 @@
             "title": "FC Raven",
             "views": [
                 {
-                    "badges": [
-                        "sensor.time",
-                        "sun.sun",
-                        null,
-                        "sensor.lightsalarmtomorrow"
-                    ],
+                    "badges": [],
                     "cards": [
                         {
                             "entities": [
                                 {
                                     "entity": "input_boolean.wakeup_weekend"
+                                },
+                                {
+                                    "entity": "sensor.lightsalarmtomorrow"
                                 },
                                 {
                                     "entity": "input_number.morning_start_hour"
@@ -24,7 +22,7 @@
                                 }
                             ],
                             "show_header_toggle": true,
-                            "title": "Wake-up Lights",
+                            "title": "Lichtwekker",
                             "type": "entities"
                         },
                         {
@@ -86,7 +84,7 @@
                                     "entity": "input_datetime.night_start_time"
                                 }
                             ],
-                            "title": "Light automations",
+                            "title": "Instellingen Lampen",
                             "type": "entities"
                         },
                         {

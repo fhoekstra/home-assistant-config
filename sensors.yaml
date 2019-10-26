@@ -22,7 +22,7 @@
           Night
         {% endif %}
     lightsalarmtomorrow:
-      friendly_name: Lights alarm tomorrow
+      friendly_name: 'Morgen lichtwekker'
       entity_id: sensor.time, input_datetime.morning_start_time, input_boolean.wakeup_enabled, input_boolean.wakeup_weekend
       value_template: >
         {% set wd = now().weekday() %}

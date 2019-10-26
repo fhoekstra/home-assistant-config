@@ -20,7 +20,7 @@ input_boolean :
     icon: mdi:theme-light-dark
   wakeup_weekend:
     name: "Enable Wake-up on weekends"
-    #initial: off # I disable the system on default on weekends,# uncomment to reset the value at restart
+    #initial: off # uncomment to reset the value at restart
     icon: mdi:calendar-blank
   auto_color_enabled:
     name: "Auto Color Enabled"
@@ -29,37 +29,37 @@ input_boolean :
 
 input_datetime:
   morning_start_time:
-    name: "Start morning at"
+    name: "Morning starts at"
     has_time: true
     has_date: false
-    initial: "07:30" # comment to not reset the value at restart
+    #initial: "07:30" # comment to not reset the value at restart
   early_eve_start_time:
-    name: "Start evening at"
+    name: "Evening starts at"
     has_time: true
     has_date: false
-    initial: "18:00"
+    #initial: "18:00"
   night_start_time:
-    name: "Start night at"
+    name: "Night starts at"
     has_time: true
     has_date: false
-    initial: "20:00"
+    #initial: "20:00"
 
 input_number:
   wakeup_time_transition:
-    name: "Wake-up lights transition (minutes)"
-    initial: 15
+    name: "Min transition"
+    #initial: 15
     min: 5
     max: 60
     step: 5
   morning_start_hour:
-    name: "Wake-up hour"
-    initial: 8
+    name: "Hour"
+    #initial: 8
     min: 2
     max: 12
     step: 1
   morning_start_minutes:
-    name: "Wake-up min"
-    initial: 0
+    name: "Minutes"
+    #initial: 0
     min: 0
     max: 55
     step: 5
@@ -85,7 +85,7 @@ light:
       - light.keuken_deurkant
       - light.keuken_koelkastkant
 
-#lovelace: # make UI editable in YAML files for custom cards
+#lovelace: # uncomment to make UI editable in YAML files for custom cards
 #  mode: yaml
 
 python_script:  # python scripts folder

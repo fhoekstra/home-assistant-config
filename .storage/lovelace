@@ -78,6 +78,12 @@
                                 },
                                 {
                                     "entity": "input_boolean.auto_color_enabled"
+                                },
+                                {
+                                    "entity": "input_datetime.early_eve_start_time"
+                                },
+                                {
+                                    "entity": "input_datetime.night_start_time"
                                 }
                             ],
                             "title": "Light automations",

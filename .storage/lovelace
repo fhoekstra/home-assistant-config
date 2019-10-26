@@ -1,0 +1,99 @@
+{
+    "data": {
+        "config": {
+            "title": "FC Raven",
+            "views": [
+                {
+                    "badges": [
+                        "sensor.time",
+                        "sun.sun",
+                        null,
+                        "sensor.lightsalarmtomorrow"
+                    ],
+                    "cards": [
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_boolean.wakeup_weekend"
+                                },
+                                {
+                                    "entity": "input_number.morning_start_hour"
+                                },
+                                {
+                                    "entity": "input_number.morning_start_minutes"
+                                }
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Wake-up Lights",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.woonkamer"
+                                },
+                                {
+                                    "entity": "light.nachtkastje"
+                                },
+                                {
+                                    "entity": "light.slaapkamer_plafond"
+                                }
+                            ],
+                            "title": "Lampen",
+                            "type": "entities"
+                        },
+                        {
+                            "entity": "weather.fc_raven",
+                            "type": "weather-forecast"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.bureau"
+                                },
+                                {
+                                    "entity": "light.keuken"
+                                },
+                                {
+                                    "entity": "light.badkamer"
+                                },
+                                {
+                                    "entity": "light.wc"
+                                },
+                                {
+                                    "entity": "light.gang"
+                                }
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Meer lampen",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_boolean.wakeup_enabled"
+                                },
+                                {
+                                    "entity": "input_number.wakeup_time_transition"
+                                },
+                                {
+                                    "entity": "input_boolean.auto_color_enabled"
+                                }
+                            ],
+                            "title": "Light automations",
+                            "type": "entities"
+                        },
+                        {
+                            "entity": "media_player.living_room",
+                            "type": "media-control"
+                        }
+                    ],
+                    "path": "default_view",
+                    "title": "Home"
+                }
+            ]
+        }
+    },
+    "key": "lovelace",
+    "version": 1
+}

@@ -37,19 +37,20 @@
   - data_template:
       transition: '{{states.input_number.wakeup_time_transition.state}}'
     service: script.do_wake_up_lights
-- alias: Wake-me up test numbers
+- alias: Change wake-up time based on sliders
   id: '1565175229702'
   trigger:
-  - platform: template
-    value_template: '{{ (((states.input_number.morning_start_hour.state | int * 3600)
-      + (states.input_number.morning_start_minutes.state | int * 60)
-      - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom(''%H:%M'',
-      False)) == ( states.sensor.time.state ) }}'
+  - platform: state
+    entity_id: input_number.morning_start_hour
+  - platform: state
+    entity_id: input_number.morning_start_minutes
   condition: []
   action:
-  - data_template:
-      transition: '{{states.input_number.wakeup_time_transition.state}}'
-    service: script.do_wake_up_lights
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.morning_start_time
+      time: "{{ ((((states('input_number.morning_start_hour') | int  * 3600 )
+                  + (states('input_number.morning_start_minutes') | int * 60)) | int) |int|timestamp_custom('%H:%M',False)) }}"
 - id: '1566761726209'
   alias: slaapkamer_slecht_bezig
   trigger:
@@ -61,10 +62,12 @@
   - condition: state
     entity_id: sensor.timeofday
     state: '''Night'''
+  action:
+  - delay:
+      milliseconds: 500
   - condition: state
     entity_id: light.nachtkastje
     state: 'off'
-  action:
   - data:
       entity_id: light.slaapkamer_plafond
     service: light.turn_off

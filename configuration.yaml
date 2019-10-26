@@ -54,8 +54,8 @@ input_number:
   morning_start_hour:
     name: "Wake-up hour"
     initial: 8
-    min: 0
-    max: 22
+    min: 2
+    max: 12
     step: 1
   morning_start_minutes:
     name: "Wake-up min"

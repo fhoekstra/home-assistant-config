@@ -21,9 +21,36 @@
                                     "entity": "input_number.morning_start_minutes"
                                 }
                             ],
-                            "show_header_toggle": true,
+                            "show_header_toggle": false,
                             "title": "Lichtwekker",
                             "type": "entities"
+                        },
+                        {
+                            "card": {
+                                "entity": "scene.bedtime",
+                                "icon": "mdi:sleep",
+                                "icon_height": 3,
+                                "show_name": false,
+                                "tap_action": {
+                                    "action": "call-service",
+                                    "service": "scene.turn_on",
+                                    "service_data": {
+                                        "entity_id": "scene.bedtime"
+                                    }
+                                },
+                                "type": "entity-button"
+                            },
+                            "conditions": [
+                                {
+                                    "entity": "sensor.timeofday",
+                                    "state": "Night"
+                                },
+                                {
+                                    "entity": "sensor.noon",
+                                    "state": "After"
+                                }
+                            ],
+                            "type": "conditional"
                         },
                         {
                             "entities": [
@@ -39,6 +66,29 @@
                             ],
                             "title": "Lampen",
                             "type": "entities"
+                        },
+                        {
+                            "card": {
+                                "entity": "light.keuken",
+                                "icon_height": 3,
+                                "show_name": false,
+                                "tap_action": {
+                                    "action": "call-service",
+                                    "service": "script.freek_morning"
+                                },
+                                "type": "entity-button"
+                            },
+                            "conditions": [
+                                {
+                                    "entity": "sensor.timeofday",
+                                    "state": "Night"
+                                },
+                                {
+                                    "entity": "sensor.noon",
+                                    "state": "Before"
+                                }
+                            ],
+                            "type": "conditional"
                         },
                         {
                             "entity": "weather.fc_raven",
@@ -84,6 +134,7 @@
                                     "entity": "input_datetime.night_start_time"
                                 }
                             ],
+                            "show_header_toggle": false,
                             "title": "Instellingen Lampen",
                             "type": "entities"
                         },

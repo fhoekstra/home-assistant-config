@@ -2,7 +2,7 @@
 - platform: time_date
   display_options:
     - 'time'
-# Period of day sensor
+# Time of day sensor
 - platform: template
   sensors:
     timeofday:
@@ -21,6 +21,7 @@
         {% else %}
           Night
         {% endif %}
+    # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:
       friendly_name: 'Morgen lichtwekker'
       entity_id: sensor.time, input_datetime.morning_start_time, input_boolean.wakeup_enabled, input_boolean.wakeup_weekend
@@ -47,4 +48,13 @@
           {{al}}
         {% else %}
           Unexpected value for al
+        {% endif %}
+    # Additional time sensor: before or after noon
+    noon:
+      entity_id: sensor.time
+      value_template: >
+        {% if (now().strftime("%H")|int) >= 12 %}
+          After
+        {% else %}
+          Before
         {% endif %}

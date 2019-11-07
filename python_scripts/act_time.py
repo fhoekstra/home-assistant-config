@@ -2,9 +2,15 @@
 # define colors for each part of day
 timecolor = {'Day': 4000, 'Evening': 2700, 'Night': 2200}
 
-# define excluded lights for each timeofday
-day_exclude = ['nachtkastje', 'slaapkamer_plafond']
-excludes = {'Day': day_exclude, 'Evening': [], 'Night':[]}
+# define which lights to adjust for each timeofday
+normalgroups = ['slaapkamer', 'gang', 'wc', 'badkamer', 'woonkamer']
+excludes = {'Day': ['slaapkamer', 'gang'], 'Evening': [], 'Night':[]}
+adjustgroups = {}
+for t in timecolor.keys():
+    if not excludes[t]:
+        adjustgroups[t] = ['all',]
+    else:
+        adjustgroups[t] = [gr for gr in normalgroups if not gr in excludes[t]]
 
 # Get timeofday
 timeofday = data.get('timeofday', None)
@@ -14,19 +20,10 @@ if timeofday is None:
 elif not timeofday in ('Day', 'Evening', 'Night'):
     logger.warning("act_time.py: Unexpected value for timeofday sensor state!")
 
-# Get lights, remove excludes
-all_lights = hass.states.entity_ids('light')
-lights = []
-for li in all_lights:
-    if not li in excludes[timeofday]:
-        lights.append(li)
-
-if not lights:
-    logger.warning("act_time.py: could not get any light ids!")
-
 offlights = []
 onlights = []
-for entity_id in lights:
+for lightgroup in adjustgroups:
+    entity_id = 'light.'+lightgroup
     state = hass.states.get(entity_id)
     if state.state == 'off':
         offlights.append(entity_id)

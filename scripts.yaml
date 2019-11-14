@@ -83,3 +83,13 @@ freek_morning:
   - service: light.turn_off
     data:
       entity_id: light.badkamer
+freek_evening:
+  sequence:
+  - service: scene.turn_on
+    data:
+      entity_id: scene.bedtime
+  - delay:
+      seconds: 5
+  - service: light.turn_off
+    data:
+      entity_id: light.wc

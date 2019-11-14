@@ -33,10 +33,7 @@
                                 "show_name": false,
                                 "tap_action": {
                                     "action": "call-service",
-                                    "service": "scene.turn_on",
-                                    "service_data": {
-                                        "entity_id": "scene.bedtime"
-                                    }
+                                    "service": "script.freek_evening"
                                 },
                                 "type": "entity-button"
                             },

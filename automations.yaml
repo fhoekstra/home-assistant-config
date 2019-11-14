@@ -31,7 +31,7 @@
       weekday:
       - mon
       - tue
-      - thu
+      - wed
       - fri
   action:
   - data_template:

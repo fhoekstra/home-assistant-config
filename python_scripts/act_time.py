@@ -7,10 +7,10 @@ normalgroups = ['slaapkamer', 'gang', 'wc', 'badkamer', 'woonkamer']
 excludes = {'Day': ['slaapkamer', 'gang'], 'Evening': [], 'Night':[]}
 adjustgroups = {}
 for t in timecolor.keys():
-    if not excludes[t]:
-        adjustgroups[t] = ['all',]
-    else:
-        adjustgroups[t] = [gr for gr in normalgroups if not gr in excludes[t]]
+    adjustgroups[t] = [gr for gr in normalgroups]
+    for excl in excludes[t]:
+        if excl in adjustgroups[t]:
+            adjustgroups[t].pop(adjustgroups[t].index(excl))
 
 # Get timeofday
 timeofday = data.get('timeofday', None)
@@ -22,7 +22,7 @@ elif not timeofday in ('Day', 'Evening', 'Night'):
 
 offlights = []
 onlights = []
-for lightgroup in adjustgroups:
+for lightgroup in adjustgroups[timeofday]:
     entity_id = 'light.'+lightgroup
     state = hass.states.get(entity_id)
     if state.state == 'off':

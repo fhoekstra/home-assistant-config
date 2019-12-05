@@ -56,7 +56,7 @@ input_number:
     name: "Uur"
     icon: mdi:clock
     #initial: 8
-    min: 2
+    min: 4
     max: 12
     step: 1
   morning_start_minutes:
@@ -82,6 +82,7 @@ light:
       - light.bureau
       - light.keuken_deurkant
       - light.keuken_koelkastkant
+      - light.hoek_woonkamer
   - platform: group
     name: keuken
     entities:

@@ -52,6 +52,9 @@ do_wake_up_lights:
       entity_id: light.slaapkamer_plafond
       kelvin: 4000
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
+  - service: switch.turn_on
+    data:
+      entity_id: ochtend_lamp
 freek_morning:
   sequence:
   - service: script.turn_on_ikea_light

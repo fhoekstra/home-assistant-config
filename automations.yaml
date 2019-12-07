@@ -83,9 +83,13 @@
     before: 05:00
     condition: time
   action:
-  - data:
-      entity_id: all
-    service: light.turn_off
+  - service: light.turn_on
+    data:
+      entity_id: 'light.gang', 'light.slaapkamer_plafond'
+      brightness: 2
+  - delay:
+      seconds: 1
+  - service: script.turn_all_lights_off
 - id: '1565175229727'
   alias: Telegram turn lights off
   trigger:
@@ -95,8 +99,7 @@
     platform: event
   condition: []
   action:
-  - data: {'entity_id': 'all'}
-    service: light.turn_off
+  - service: script.turn_all_lights_off
 - id: '1565175229111'
   alias: Update Available Notification
   trigger:

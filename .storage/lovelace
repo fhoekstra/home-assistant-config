@@ -45,6 +45,10 @@
                                 {
                                     "entity": "sensor.noon",
                                     "state": "After"
+                                },
+                                {
+                                    "entity": "light.slaapkamer",
+                                    "state": "on"
                                 }
                             ],
                             "type": "conditional"
@@ -83,6 +87,10 @@
                                 {
                                     "entity": "sensor.noon",
                                     "state": "Before"
+                                },
+                                {
+                                    "entity": "light.woonkamer",
+                                    "state": "off"
                                 }
                             ],
                             "type": "conditional"
@@ -141,6 +149,14 @@
                         {
                             "entity": "media_player.living_room",
                             "type": "media-control"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "switch.ochtend_lamp"
+                                }
+                            ],
+                            "type": "entities"
                         }
                     ],
                     "path": "default_view",

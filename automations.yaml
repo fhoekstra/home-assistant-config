@@ -52,25 +52,22 @@
       time: "{{ ((((states('input_number.morning_start_hour') | int  * 3600 )
                   + (states('input_number.morning_start_minutes') | int * 60)) | int) |int|timestamp_custom('%H:%M',False)) }}"
 - id: '1566761726209'
-  alias: slaapkamer_slecht_bezig
+  alias: nacht_brightness
   trigger:
   - entity_id: light.slaapkamer_plafond
-    from: 'off'
+    from: 'on'
     platform: state
-    to: 'on'
+    to: 'off'
   condition:
   - condition: state
     entity_id: sensor.timeofday
     state: '''Night'''
   action:
   - delay:
-      milliseconds: 500
-  - condition: state
-    entity_id: light.nachtkastje
-    state: 'off'
-  - data:
-      entity_id: light.slaapkamer_plafond
-    service: light.turn_off
+      seconds: 1
+  - condition: template
+    value_template: "{{ states.light.nachtkastje.attributes.brightness > 30 }}"
+  - service: script.freek_evening
 - id: '1566763763348'
   alias: Welterusten
   trigger:
@@ -83,12 +80,6 @@
     before: 05:00
     condition: time
   action:
-  - service: light.turn_on
-    data:
-      entity_id: 'light.gang', 'light.slaapkamer_plafond'
-      brightness: 2
-  - delay:
-      seconds: 1
   - service: script.turn_all_lights_off
 - id: '1565175229727'
   alias: Telegram turn lights off

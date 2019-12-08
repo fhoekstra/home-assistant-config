@@ -63,6 +63,8 @@ do_wake_up_lights:
       entity_id: light.slaapkamer_plafond
       kelvin: 4000
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
+  - delay:
+      seconds: "{{ (((transition | float * 60) / 3) | int) }}"
   - service: switch.turn_on
     data:
       entity_id: switch.ochtend_lamp
@@ -103,7 +105,18 @@ freek_evening:
     data:
       entity_id: scene.bedtime
   - delay:
-      seconds: 5
+      seconds: 1
+  - service: light.turn_on
+    data:
+      brightness: 2
+      entity_id:
+        - light.gang
+        - light.slaapkamer_plafond
+  - delay:
+      seconds: 1
   - service: light.turn_off
     data:
-      entity_id: light.wc
+      entity_id:
+        - light.wc
+        - light.gang
+        - light.slaapkamer_plafond

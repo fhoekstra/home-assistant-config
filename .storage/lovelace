@@ -118,6 +118,9 @@
                                 },
                                 {
                                     "entity": "light.gang"
+                                },
+                                {
+                                    "entity": "switch.ochtend_lamp"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -149,14 +152,6 @@
                         {
                             "entity": "media_player.living_room",
                             "type": "media-control"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "switch.ochtend_lamp"
-                                }
-                            ],
-                            "type": "entities"
                         }
                     ],
                     "path": "default_view",

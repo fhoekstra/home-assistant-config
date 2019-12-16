@@ -44,6 +44,12 @@ fade_in_ikea_light:
 do_wake_up_lights:
   alias: Wake-Up Lights
   sequence:
+  - service: light.turn_on
+    data:
+      entity_id: light.gang
+      kelvin: 3600
+  - delay:
+      seconds: 1
   - service: script.fade_in_ikea_light
     data_template:
       entity_id: light.gang

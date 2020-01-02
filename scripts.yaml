@@ -15,13 +15,13 @@ turn_on_ikea_light:
   - service: light.turn_on
     data_template:
       entity_id: '{{ entity_id }}'
-      kelvin: '{{ kelvin }}'
+      brightness_pct: '{{ brightness_pct }}'
   - delay:
       milliseconds: 500
   - service: light.turn_on
     data_template:
       entity_id: '{{ entity_id }}'
-      brightness_pct: '{{ brightness_pct }}'
+      kelvin: '{{ kelvin }}'
 fade_in_ikea_light:
   alias: Fade-in IKEA light
   sequence:
@@ -47,7 +47,6 @@ do_wake_up_lights:
   - service: light.turn_on
     data:
       entity_id: light.gang
-      kelvin: 3600
   - delay:
       seconds: 1
   - service: script.fade_in_ikea_light
@@ -78,33 +77,19 @@ freek_morning:
   sequence:
   - service: script.turn_on_ikea_light
     data:
-      entity_id: light.keuken
+      entity_id:
+        - light.keuken
+        - light.wc
+        - light.badkamer
       kelvin: 4000
       brightness_pct: 100
   - delay:
       seconds: 2
-  - service: script.turn_on_ikea_light
-    data:
-      entity_id: light.wc
-      kelvin: 4000
-      brightness_pct: 100
-  - delay:
-      seconds: 1
   - service: light.turn_off
     data:
-      entity_id: light.wc
-  - delay:
-      seconds: 2
-  - service: script.turn_on_ikea_light
-    data:
-      entity_id: light.badkamer
-      kelvin: 4000
-      brightness_pct: 100
-  - delay:
-      seconds: 1
-  - service: light.turn_off
-    data:
-      entity_id: light.badkamer
+      entity_id:
+        - light.wc
+        - light.badkamer
 freek_evening:
   sequence:
   - service: scene.turn_on

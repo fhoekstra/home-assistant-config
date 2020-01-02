@@ -92,7 +92,6 @@ light:
 scene:
   - name: bedtime
     entities:
-      light.woonkamer: off
       light.gang: off
       light.slaapkamer_plafond: off
       light.nachtkastje:

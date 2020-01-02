@@ -102,6 +102,9 @@
                         {
                             "entities": [
                                 {
+                                    "entity": "light.gang"
+                                },
+                                {
                                     "entity": "light.bureau"
                                 },
                                 {
@@ -115,9 +118,6 @@
                                 },
                                 {
                                     "entity": "light.wc"
-                                },
-                                {
-                                    "entity": "light.gang"
                                 },
                                 {
                                     "entity": "switch.ochtend_lamp"

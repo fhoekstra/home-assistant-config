@@ -1,0 +1,30 @@
+- id: '1566761726209'
+  alias: nacht_brightness
+  trigger:
+  - entity_id: light.slaapkamer_plafond
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: sensor.timeofday
+    state: '''Night'''
+  action:
+  - delay:
+      seconds: 1
+  - condition: template
+    value_template: "{{ states.light.nachtkastje.attributes.brightness > 30 }}"
+  - service: script.freek_evening
+- id: '1566763763348'
+  alias: Welterusten
+  trigger:
+  - entity_id: light.slaapkamer
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - after: '22:00'
+    before: 05:00
+    condition: time
+  action:
+  - service: script.turn_all_lights_off

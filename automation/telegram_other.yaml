@@ -1,0 +1,41 @@
+- id: '1565175229727'
+  alias: Telegram turn lights off
+  trigger:
+  - event_data:
+      command: /lightsoff
+    event_type: telegram_command
+    platform: event
+  condition: []
+  action:
+  - service: script.turn_all_lights_off
+- id: '1565175229111'
+  alias: Update Available Notification
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.updater
+    from: 'off'
+    to: 'on'
+  action:
+  - service: notify.teledobbyme
+    data_template:
+      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
+        }} is available.
+- id: '1666175229111'
+  alias: Dankjewel Dobby
+  trigger:
+  - platform: event
+    event_type: telegram_text
+  condition:
+  - condition: template
+    value_template: >
+      {% set text = trigger.event.data.text %}
+      {{(('Dank' in text) or ('dank' in text)
+         or ('thank' in text) or ('thx' in text))}}
+  action:
+  - service: telegram_bot.send_message
+    data_template:
+      target: "{{trigger.event.data.chat_id}}"
+      message: >
+        {{(["Graag gedaan!", "Ik doe het graag!",
+        "Graag gedaan!", "Voor jou altijd!",
+        "Ach, het stelt niks voor!"]| random)}}

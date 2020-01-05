@@ -127,6 +127,6 @@ notify:
     chat_id: !secret home_group_telegram_id
 
 group: !include groups.yaml
-automation: !include automations.yaml
+automation: !include_dir_merge_list automation/
 script: !include scripts.yaml
 sensor: !include sensors.yaml

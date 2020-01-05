@@ -1,0 +1,36 @@
+- id: '1565175339111'
+  alias: Telegram start reminder
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+     command: /remind
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data_template:
+      target: '{{trigger.event.data.chat_id}}'
+      message: 'Over hoeveel uur?'
+      inline_keyboard:
+        - "1:/setremind 1h, 1.5:/setremind 1.5h"
+        - "2:/setremind 2h, 2.5:/setremind 2.5h"
+        - "3:/setremind 3h, 3.5:/setremind 3.5h"
+        - "4:/setremind 4h, 4.5:/setremind 4.5h"
+        - "5:/setremind 5h, 5.5:/setremind 5.5h"
+- id: '1565175449111'
+  alias: Set reminder Telegram callback
+  trigger:
+  - platform: event
+    event_type: telegram_callback
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data_template:
+      target: "{{trigger.event.data.chat_id}}"
+      message: "OK, ik herinner {{trigger.event.data.from_first}} over {{trigger.event.data.data[11:]}}"
+  - delay:
+      minutes: "{{((trigger.event.data.data[10:-1]|float*60)|int)}}"
+  - service: telegram_bot.send_message
+    data_template:
+      target: "{{trigger.event.data.chat_id}}"
+      message: "{{trigger.event.data.from_first}}, het is nu {{trigger.event.data.data[11:]}} later."

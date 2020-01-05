@@ -1,0 +1,13 @@
+- id: '1565175229729'
+  alias: Auto color temperature - trigger on time
+  trigger:
+  - entity_id: sensor.timeofday
+    platform: state
+  condition:
+  - condition: state
+    entity_id: input_boolean.auto_color_enabled
+    state: 'on'
+  action:
+  - data_template:
+      timeofday: '{{states.sensor.timeofday.state}}'
+    service: python_script.act_time

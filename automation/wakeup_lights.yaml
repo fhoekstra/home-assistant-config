@@ -1,0 +1,40 @@
+- alias: Wake-me up using bedroom lights
+  id: '1565175229733'
+  trigger:
+  - platform: template
+    value_template: '{{ (((states.input_datetime.morning_start_time.attributes[''timestamp''])
+      - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom(''%H:%M'',
+      False) ) == ( states.sensor.time.state ) }} '
+  condition:
+  - condition: state
+    entity_id: input_boolean.wakeup_enabled
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_boolean.wakeup_weekend
+      state: 'on'
+    - condition: time
+      weekday:
+      - mon
+      - tue
+      - thu
+      - fri
+  action:
+  - data_template:
+      transition: '{{states.input_number.wakeup_time_transition.state}}'
+    service: script.do_wake_up_lights
+- alias: Change wake-up time based on sliders
+  id: '1565175229702'
+  trigger:
+  - platform: state
+    entity_id: input_number.morning_start_hour
+  - platform: state
+    entity_id: input_number.morning_start_minutes
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.morning_start_time
+      time: "{{ ((((states('input_number.morning_start_hour') | int  * 3600 )
+                  + (states('input_number.morning_start_minutes') | int * 60)) | int) |int|timestamp_custom('%H:%M',False)) }}"

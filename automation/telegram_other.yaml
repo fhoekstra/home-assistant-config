@@ -7,6 +7,12 @@
     platform: event
   condition: []
   action:
+  - service: telegram_bot.send_message
+    data_template:
+      target: "{{trigger.event.data.chat_id}}"
+      message: >
+        {{(["Ik ga meteen aan de slag!", "Komt in orde",
+        "Ik doe het direct", "Ja, meester"]| random)}}
   - service: script.turn_all_lights_off
 - id: '1565175229111'
   alias: Update Available Notification

@@ -89,19 +89,6 @@ light:
       - light.keuken_deurkant
       - light.keuken_koelkastkant
 
-scene:
-  - name: bedtime
-    entities:
-      light.gang: off
-      light.slaapkamer_plafond: off
-      light.nachtkastje:
-        state: on
-        brightness_pct: 20
-      light.wc:
-        state: on
-        brightness_pct: 2
-
-
 #lovelace: # uncomment to make UI editable in YAML files for custom cards
 #  mode: yaml
 

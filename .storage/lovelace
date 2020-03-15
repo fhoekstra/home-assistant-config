@@ -27,7 +27,7 @@
                         },
                         {
                             "card": {
-                                "entity": "scene.bedtime",
+                                "entity": "script.freek_evening",
                                 "icon": "mdi:sleep",
                                 "icon_height": 3,
                                 "show_name": false,
@@ -96,7 +96,7 @@
                             "type": "conditional"
                         },
                         {
-                            "entity": "weather.fc_raven",
+                            "entity": "weather.home",
                             "type": "weather-forecast"
                         },
                         {
@@ -124,6 +124,7 @@
                                 }
                             ],
                             "show_header_toggle": true,
+                            "state_color": true,
                             "title": "Meer lampen",
                             "type": "entities"
                         },

@@ -36,14 +36,13 @@ for lightgroup in adjustgroups[timeofday]:
 
 # Change color of off lights
 for entity_id in offlights:
-    if entity_id == 'light.gang':
-        hass.services.call('light', 'turn_on', {'entity_id':entity_id})
-        time.sleep(0.3)
+    hass.services.call('light', 'turn_on', {'entity_id':entity_id})
+    time.sleep(0.6)
     service_data = {'entity_id': entity_id, 'kelvin': timecolor[timeofday]}
     hass.services.call('light', 'turn_on', service_data)
-    time.sleep(0.2)
+    time.sleep(0.4)
 
-time.sleep(2)
+time.sleep(3)
 # Turn them back off
 for entity_id in offlights:
     service_data = {'entity_id': entity_id}

@@ -92,15 +92,20 @@ freek_morning:
         - light.badkamer
 freek_evening:
   sequence:
+    - service: light.turn_on
+    data:
+      entity_id: light.nachtkastje
+      brightness: 1
+      transition: 300
+  - delay: '00:00:01'
   - service: light.turn_on
     data:
-      brightness: 2
+      brightness: 1
       entity_id:
         - light.wc
         - light.gang
         - light.slaapkamer_plafond
-  - delay:
-      seconds: 1
+  - delay: '00:00:01'
   - service: light.turn_off
     data:
       entity_id:

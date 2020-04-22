@@ -2,6 +2,23 @@
 - platform: time_date
   display_options:
     - 'time'
+# Latest HA version sensor, for notifications of new updates
+# source: https://community.home-assistant.io/t/update-notification-automation-not-working/117043/4?u=fc_raven
+- platform: command_line
+  name: latest_ha_version
+  # this next line takes the latest home assistant release from pypi that
+  # doesn't have a 'b'. If you want the latest beta, change the regex pattern:
+  # r'homeassistant-[\d.]+.tar' to r'homeassistant-[b\d.]+.tar'
+  command: >-
+    python3 -c "import requests; import re;
+    print(
+      [name[14:-4] for name in
+          re.findall(
+            r'homeassistant-[\d.]+.tar',
+            requests.get('https://pypi.org/simple/homeassistant').text
+          )
+      ][-1])"
+  scan_interval: 3600
 # Time of day sensor
 - platform: template
   sensors:

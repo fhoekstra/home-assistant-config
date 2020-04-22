@@ -5,7 +5,6 @@
       command: /lightsoff
     event_type: telegram_command
     platform: event
-  condition: []
   action:
   - service: telegram_bot.send_message
     data_template:
@@ -14,18 +13,18 @@
         {{(["Ik ga meteen aan de slag!", "Komt in orde",
         "Ik doe het direct", "Ja, meester"]| random)}}
   - service: script.turn_all_lights_off
-- id: '1565175229111'
-  alias: Update Available Notification
+- alias: Update notification
+  initial_state: True
   trigger:
-  - platform: state
-    entity_id: binary_sensor.updater
-    from: 'off'
-    to: 'on'
+    - platform: state
+      entity_id: sensor.latest_ha_version
   action:
-  - service: notify.teledobbyme
-    data_template:
-      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
-        }} is available.
+    - service: notify.teledobbyme
+      data_template: 
+        title: "New Home Assistant Release"
+        message: "Home Assistant {{ states.sensor.latest_ha_version.state }} is nu beschikbaar.
+        
+        https://www.home-assistant.io/blog/categories/release-notes/"
 - id: '1666175229111'
   alias: Dankjewel Dobby
   trigger:

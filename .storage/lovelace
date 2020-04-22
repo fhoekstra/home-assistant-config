@@ -45,10 +45,6 @@
                                 {
                                     "entity": "sensor.noon",
                                     "state": "After"
-                                },
-                                {
-                                    "entity": "light.slaapkamer",
-                                    "state": "on"
                                 }
                             ],
                             "type": "conditional"

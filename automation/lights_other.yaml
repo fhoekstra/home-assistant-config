@@ -8,7 +8,7 @@
   condition:
   - condition: state
     entity_id: sensor.timeofday
-    state: '''Night'''
+    state: Night
   action:
   - delay:
       seconds: 1
@@ -16,7 +16,7 @@
     value_template: "{{ states.light.nachtkastje.attributes.brightness > 30 }}"
   - service: script.freek_evening
 - id: '1566763763348'
-  alias: Welterusten
+  alias: Welterusten  # turn off all lights 5 min after slaapkamer goes dark
   trigger:
   - entity_id: light.slaapkamer
     from: 'on'
@@ -27,4 +27,8 @@
     before: 05:00
     condition: time
   action:
+  - delay: '00:05:00'
+  - condition: state
+    entity_id: light.slaapkamer
+    state: 'off'
   - service: script.turn_all_lights_off

@@ -92,7 +92,7 @@ freek_morning:
         - light.badkamer
 freek_evening:
   sequence:
-    - service: light.turn_on
+  - service: light.turn_on
     data:
       entity_id: light.nachtkastje
       brightness: 1

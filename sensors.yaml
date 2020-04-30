@@ -3,12 +3,14 @@
   display_options:
     - 'time'
 # Latest HA version sensor, for notifications of new updates
-# source: https://community.home-assistant.io/t/update-notification-automation-not-working/117043/4?u=fc_raven
+# based on VDRainer's idea: https://community.home-assistant.io/t/update-notification-automation-not-working/117043/4
 - platform: command_line
   name: latest_ha_version
-  # this next line takes the latest home assistant release from pypi that
-  # doesn't have a 'b'. If you want the latest beta, change the regex pattern:
-  # r'homeassistant-[\d.]+.tar' to r'homeassistant-[b\d.]+.tar'
+  # this takes the latest home assistant release from pypi
+  # that doesn't have a 'b' in the version number.
+  # If you want the latest release including beta releases,
+  # change the regex pattern from r'homeassistant-[\d.]+.tar'
+  # to r'homeassistant-[b\d.]+.tar'
   command: >-
     python3 -c "import requests; import re;
     print(
@@ -20,17 +22,24 @@
       ][-1])"
   scan_interval: 3600
 # Time of day sensor
+# To test this template, add .replace(hour=5, minute=15) after t = now().time()
 - platform: template
   sensors:
     timeofday:
       friendly_name: Time of day
-      entity_id: sensor.time, input_datetime.morning_start_time, input_datetime.early_eve_start_time, input_datetime.night_start_time
-      value_template: >
-        {% set d = now().strftime("%Y-%m-%d ") %}
-        {% set t = now().timestamp() %}
-        {% set morning_start = strptime(d + states('input_datetime.morning_start_time'), '%Y-%m-%d %H:%M:%S').timestamp() %}
-        {% set evening_start = strptime(d + states('input_datetime.early_eve_start_time'), '%Y-%m-%d %H:%M:%S').timestamp() %}
-        {% set night_start = strptime(d + states('input_datetime.night_start_time'), '%Y-%m-%d %H:%M:%S').timestamp() %}
+      entity_id:
+        - sensor.time
+        - input_datetime.morning_start_time
+        - input_datetime.early_eve_start_time
+        - input_datetime.night_start_time
+      value_template: >-
+        {% set t = now().time() %}
+        {% set morning_start = strptime(
+          states('input_datetime.morning_start_time'), '%H:%M:%S').time() %}
+        {% set evening_start = strptime(
+          states('input_datetime.early_eve_start_time'), '%H:%M:%S').time() %}
+        {% set night_start = strptime(
+          states('input_datetime.night_start_time'), '%H:%M:%S').time() %}
         {% if morning_start <= t < evening_start  %}
           Day
         {% elif evening_start <= t < night_start %}
@@ -41,35 +50,39 @@
     # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:
       friendly_name: 'Morgen lichtwekker'
-      entity_id: sensor.time, input_datetime.morning_start_time, input_boolean.wakeup_enabled, input_boolean.wakeup_weekend
-      value_template: >
+      entity_id:
+        - sensor.time
+        - input_datetime.morning_start_time
+        - input_boolean.wakeup_enabled
+        - input_boolean.wakeup_weekend
+      value_template: >-
         {% set wd = now().weekday() %}
         {% if states.input_boolean.wakeup_enabled.state == 'on' %}
           {% if (4 < wd + 1 < 7 or wd + 1 == 2) %}
             {% if states.input_boolean.wakeup_weekend.state == 'on' %}
-              {% set al = 'on' %}
+              {% set alarm = 'on' %}
             {% else %}
-               {% set al = 'off' %}
+               {% set alarm = 'off' %}
             {% endif %}
           {% else %}
-            {% set al = 'on' %}
+            {% set alarm = 'on' %}
           {%endif%}
         {% elif states.input_boolean.wakeup_enabled.state == 'off' %}
-          {% set al = 'off' %}
+          {% set alarm = 'off' %}
         {% else %}
           Unexpected value for states.input_boolean.wakeup_enabled.state
         {% endif %}
-        {% if al == 'on' %}
+        {% if alarm == 'on' %}
           {{states.input_datetime.morning_start_time.state[:5]}}
-        {% elif al == 'off' %}
-          {{al}}
+        {% elif alarm == 'off' %}
+          {{alarm}}
         {% else %}
-          Unexpected value for al
+          Unexpected value for alarm
         {% endif %}
     # Additional time sensor: before or after noon
     noon:
       entity_id: sensor.time
-      value_template: >
+      value_template: >-
         {% if (now().strftime("%H")|int) >= 12 %}
           After
         {% else %}

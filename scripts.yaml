@@ -55,21 +55,21 @@ do_wake_up_lights:
       kelvin: 4000
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - delay:
-      seconds: "{{ (((transition | float * 60 ) / 3) | int) }}"
+      seconds: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - service: script.fade_in_ikea_light
     data_template:
       entity_id: light.nachtkastje
       kelvin: 4000
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - delay:
-      seconds: "{{ (((transition | float * 60 ) / 3) | int) }}"
+      seconds: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - service: script.fade_in_ikea_light
     data_template:
       entity_id: light.slaapkamer_plafond
       kelvin: 4000
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - delay:
-      seconds: "{{ (((transition | float * 60) / 3) | int) }}"
+      seconds: '{{ (((transition | float * 60) / 3) | int) }}'
   - service: switch.turn_on
     data:
       entity_id: switch.ochtend_lamp
@@ -78,9 +78,9 @@ freek_morning:
   - service: script.turn_on_ikea_light
     data:
       entity_id:
-        - light.keuken
-        - light.wc
-        - light.badkamer
+      - light.keuken
+      - light.wc
+      - light.badkamer
       kelvin: 4000
       brightness_pct: 100
   - delay:
@@ -88,27 +88,25 @@ freek_morning:
   - service: light.turn_off
     data:
       entity_id:
-        - light.wc
-        - light.badkamer
+      - light.wc
+      - light.badkamer
 freek_evening:
   sequence:
-  - service: light.turn_on
-    data:
+  - data:
+      brightness: 1
       entity_id: light.nachtkastje
-      brightness: 1
       transition: 300
-  - delay: '00:00:01'
-  - service: light.turn_on
-    data:
+    service: light.turn_on
+  - delay: 00:00:01
+  - data:
       brightness: 1
       entity_id:
-        - light.wc
-        - light.gang
-        - light.slaapkamer_plafond
-  - delay: '00:00:01'
-  - service: light.turn_off
-    data:
+      - light.wc
+    service: light.turn_on
+  - delay: 00:00:01
+  - data:
       entity_id:
-        - light.wc
-        - light.gang
-        - light.slaapkamer_plafond
+      - light.wc
+      - light.gang
+      - light.slaapkamer_plafond
+    service: light.turn_off

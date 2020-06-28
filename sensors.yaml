@@ -20,7 +20,7 @@
             requests.get('https://pypi.org/simple/homeassistant').text
           )
       ][-1])"
-  scan_interval: 3600
+  scan_interval: 06:00:00
 # Time of day sensor
 # To test this template, add .replace(hour=5, minute=15) after t = now().time()
 - platform: template

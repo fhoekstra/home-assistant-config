@@ -56,8 +56,8 @@ input_number:
     name: "Uur"
     icon: mdi:clock
     #initial: 8
-    min: 4
-    max: 12
+    min: 6
+    max: 10
     step: 1
   morning_start_minutes:
     name: "Minuten"

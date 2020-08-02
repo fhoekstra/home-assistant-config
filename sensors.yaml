@@ -25,7 +25,7 @@
 # To test this template, add .replace(hour=5, minute=15) after t = now().time()
 - platform: template
   sensors:
-    timeofday:
+    time_of_day:
       friendly_name: Time of day
       entity_id:
         - sensor.time

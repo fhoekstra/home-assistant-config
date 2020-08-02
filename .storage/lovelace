@@ -59,6 +59,9 @@
                                 },
                                 {
                                     "entity": "light.slaapkamer_plafond"
+                                },
+                                {
+                                    "entity": "light.gang"
                                 }
                             ],
                             "title": "Lampen",
@@ -97,9 +100,6 @@
                         },
                         {
                             "entities": [
-                                {
-                                    "entity": "light.gang"
-                                },
                                 {
                                     "entity": "light.bureau"
                                 },

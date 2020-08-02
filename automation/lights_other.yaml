@@ -7,7 +7,7 @@
     to: 'off'
   condition:
   - condition: state
-    entity_id: sensor.timeofday
+    entity_id: sensor.time_of_day
     state: Night
   action:
   - delay:

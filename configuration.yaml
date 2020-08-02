@@ -26,6 +26,9 @@ input_boolean :
     name: "Kleurverloop"
     initial: on
     icon: mdi:weather-sunset
+  vacation:
+    name: "Vakantie"
+    icon: mdi:tent
 
 input_datetime:
   morning_start_time:

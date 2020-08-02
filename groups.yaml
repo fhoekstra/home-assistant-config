@@ -12,3 +12,13 @@ other:
     - input_datetime.early_eve_start_time
     - input_datetime.night_start_time
     - input_number.wakeup_time_transition
+
+simulation_lights:  # For vacation mode
+  name: "Simulation Lights"
+  entities:
+    - light.bureau
+    - light.gang
+    - light.hoek_woonkamer
+    - light.keuken
+    - light.slaapkamer_plafond
+    - light.nachtkastje

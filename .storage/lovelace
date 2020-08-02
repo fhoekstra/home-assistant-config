@@ -125,6 +125,34 @@
                             "type": "entities"
                         },
                         {
+                            "entity": "media_player.living_room",
+                            "type": "media-control"
+                        }
+                    ],
+                    "path": "default_view",
+                    "title": "Home"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "entity": "input_boolean.vacation",
+                            "hold_action": {
+                                "action": "more-info"
+                            },
+                            "icon_height": "60px",
+                            "show_icon": true,
+                            "show_name": true,
+                            "show_state": true,
+                            "tap_action": {
+                                "action": "toggle",
+                                "confirmation": {
+                                    "text": "Are you sure you want to toggle vacation mode?"
+                                }
+                            },
+                            "type": "button"
+                        },
+                        {
                             "entities": [
                                 {
                                     "entity": "input_boolean.wakeup_enabled"
@@ -145,14 +173,11 @@
                             "show_header_toggle": false,
                             "title": "Instellingen Lampen",
                             "type": "entities"
-                        },
-                        {
-                            "entity": "media_player.living_room",
-                            "type": "media-control"
                         }
                     ],
-                    "path": "default_view",
-                    "title": "Home"
+                    "icon": "mdi:gear",
+                    "path": "settings",
+                    "title": "Settings"
                 }
             ]
         }

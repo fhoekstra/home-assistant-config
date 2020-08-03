@@ -78,7 +78,7 @@ freek_morning:
   - service: script.turn_on_ikea_light
     data:
       entity_id:
-      - light.keuken
+      - light.woonkamer
       - light.wc
       - light.badkamer
       kelvin: 4000

@@ -22,6 +22,8 @@
   trigger:
   - platform: event
     event_type: telegram_callback
+    event_data:
+      command: '/setremind'
   condition: []
   action:
   - service: telegram_bot.send_message

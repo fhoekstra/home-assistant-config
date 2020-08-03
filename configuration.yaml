@@ -116,6 +116,11 @@ notify:
     platform: telegram
     chat_id: !secret home_group_telegram_id
 
+# For Calendar integration
+google:
+  client_id: !secret GOOGLE_CLIENT_ID
+  client_secret: !secret GOOGLE_CLIENT_SECRET
+
 group: !include groups.yaml
 automation: !include_dir_merge_list automation/
 script: !include scripts.yaml

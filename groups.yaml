@@ -16,9 +16,6 @@ other:
 simulation_lights:  # For vacation mode
   name: "Simulation Lights"
   entities:
-    - light.bureau
     - light.gang
-    - light.hoek_woonkamer
-    - light.keuken
-    - light.slaapkamer_plafond
-    - light.nachtkastje
+    - light.woonkamer
+    - light.slaapkamer

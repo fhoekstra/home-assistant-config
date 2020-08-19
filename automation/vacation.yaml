@@ -22,7 +22,7 @@
       after: sunset
       after_offset: '-01:35:00'
     - condition: time
-      before: '23:00:00'
+      before: '22:30:00'
 
   action:
     - delay: "00:{{ '{:02}'.format(range(0,30) | random | int) }}:00"
@@ -40,7 +40,7 @@
 
   trigger:
     - platform: time
-      at: '23:00:00'
+      at: '22:30:00'
 
   condition:
     - condition: state
@@ -81,8 +81,12 @@
     data:
       entity_id: input_boolean.vacation
   - service: script.turn_all_lights_off
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.wakeup_enabled
   - service: telegram_bot.send_message
     data_template:
       target: "{{trigger.event.data.chat_id}}"
       message: >-
-        OK, ik heb het licht uitgedaan en de vakantie-stand aangezet
+        OK, ik heb het licht uitgedaan en de vakantie-stand aangezet 
+        en de lichtwekker uitgezet

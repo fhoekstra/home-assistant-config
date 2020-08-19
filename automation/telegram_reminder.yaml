@@ -19,6 +19,7 @@
         - "5:/setremind 5h, 5.5:/setremind 5.5h"
 - id: '1565175449111'
   alias: Set reminder Telegram callback
+  mode: parallel  # Makes it possible to have multiple reminders in parallel
   trigger:
   - platform: event
     event_type: telegram_callback
@@ -29,10 +30,14 @@
   - service: telegram_bot.send_message
     data_template:
       target: "{{trigger.event.data.chat_id}}"
-      message: "OK, ik herinner {{trigger.event.data.from_first}} over {{trigger.event.data.data[11:]}}"
+      message: >
+        OK, ik herinner {{trigger.event.data.from_first}}
+        over {{trigger.event.data.data[11:]}}
   - delay:
-      minutes: "{{((trigger.event.data.data[10:-1]|float*60)|int)}}"
+      minutes: '{{ ((trigger.event.data.data[10:-1]|float*60)|int) }}'
   - service: telegram_bot.send_message
     data_template:
       target: "{{trigger.event.data.chat_id}}"
-      message: "{{trigger.event.data.from_first}}, het is nu {{trigger.event.data.data[11:]}} later."
+      message: >-
+        {{trigger.event.data.from_first}},
+        het is nu {{trigger.event.data.data[11:]}} later.

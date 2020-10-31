@@ -8,7 +8,7 @@
 ## Turn on/off indoor lights randomly
 #############################################################################
 - id: 'vakantie_toggle_lights'
-  alias: Vakantie Random Away Lights
+  alias: Vakantie - Random Away Lights
 
   trigger:
     - platform: time_pattern
@@ -54,6 +54,7 @@
 
 # Telegram asks to turn on vacation mode based on Google Calendar event
 - id: 'vakantie_telegram_vraag'
+  alias: Vakantie - Telegram vraag
   trigger:
     - platform: state
       entity_id: calendar.vacation_c
@@ -71,6 +72,7 @@
       inline_keyboard:
         - "Ja:/vakantie_aan, Nee:/doe_niets"
 - id: 'vakantie_aan'
+  alias: Vakantie - Aan via Telegram
   trigger:
   - platform: event
     event_type: telegram_callback

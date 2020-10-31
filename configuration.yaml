@@ -91,6 +91,18 @@ light:
     entities:
       - light.keuken_deurkant
       - light.keuken_koelkastkant
+  - platform: group
+    name: all_lights
+    entities:
+      - light.bureau
+      - light.keuken_deurkant
+      - light.keuken_koelkastkant
+      - light.hoek_woonkamer
+      - light.nachtkastje
+      - light.slaapkamer_plafond
+      - light.gang
+      - light.wc
+      - light.badkamer
 
 #lovelace: # uncomment to make UI editable in YAML files for custom cards
 #  mode: yaml

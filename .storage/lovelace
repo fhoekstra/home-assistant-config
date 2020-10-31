@@ -1,4 +1,6 @@
 {
+    "version": 1,
+    "key": "lovelace",
     "data": {
         "config": {
             "title": "FC Raven",
@@ -168,6 +170,9 @@
                                 },
                                 {
                                     "entity": "input_datetime.night_start_time"
+                                },
+                                {
+                                    "entity": "light.all_lights"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -175,13 +180,11 @@
                             "type": "entities"
                         }
                     ],
-                    "icon": "mdi:gear",
+                    "icon": "",
                     "path": "settings",
-                    "title": "Settings"
+                    "title": "Modes"
                 }
             ]
         }
-    },
-    "key": "lovelace",
-    "version": 1
+    }
 }

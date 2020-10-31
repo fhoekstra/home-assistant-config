@@ -27,19 +27,20 @@
   sensors:
     time_of_day:
       friendly_name: Time of day
-      entity_id:
-        - sensor.time
-        - input_datetime.morning_start_time
-        - input_datetime.early_eve_start_time
-        - input_datetime.night_start_time
       value_template: >-
-        {% set t = now().time() %}
-        {% set morning_start = strptime(
-          states('input_datetime.morning_start_time'), '%H:%M:%S').time() %}
-        {% set evening_start = strptime(
-          states('input_datetime.early_eve_start_time'), '%H:%M:%S').time() %}
-        {% set night_start = strptime(
-          states('input_datetime.night_start_time'), '%H:%M:%S').time() %}
+        {% set t = states('sensor.time') %}
+        {% set morning_start = state_attr(
+            'input_datetime.morning_start_time', 'timestamp'
+          ) | int | timestamp_custom('%H:%M', False)
+          %}
+        {% set evening_start = state_attr(
+            'input_datetime.early_eve_start_time', 'timestamp'
+          ) | int | timestamp_custom('%H:%M', False)
+        %}
+        {% set night_start = state_attr(
+            'input_datetime.night_start_time', 'timestamp'
+          ) | int | timestamp_custom('%H:%M', False)
+        %}
         {% if morning_start <= t < evening_start  %}
           Day
         {% elif evening_start <= t < night_start %}
@@ -50,13 +51,10 @@
     # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:
       friendly_name: 'Morgen lichtwekker'
-      entity_id:
-        - sensor.time
-        - input_datetime.morning_start_time
-        - input_boolean.wakeup_enabled
-        - input_boolean.wakeup_weekend
+      # Time trigger can be removed starting from 0.117
       value_template: >-
         {% set wd = now().weekday() %}
+        {% set trigger = states('sensor.time') %}
         {% if states.input_boolean.wakeup_enabled.state == 'on' %}
           {% if (4 < wd + 1 < 7 or wd + 1 == 2) %}
             {% if states.input_boolean.wakeup_weekend.state == 'on' %}
@@ -80,9 +78,9 @@
           Unexpected value for alarm
         {% endif %}
     # Additional time sensor: before or after noon
-    noon:
-      entity_id: sensor.time
+    noon:  # Trigger can be removed starting form 0.117
       value_template: >-
+        {% set trigger = states('sensor.time') %}
         {% if (now().strftime("%H")|int) >= 12 %}
           After
         {% else %}

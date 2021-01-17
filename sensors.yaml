@@ -13,11 +13,18 @@
   # to r'homeassistant-[b\d.]+.tar'
   command: >-
     python3 -c "import requests; import re;
+    url = 'https://pypi.org/simple/homeassistant'
+    start = 'homeassistant-';
+    end = '.tar.gz';
+    def get_middle(full, start, end):
+        if not full.startswith(start) and full.endswith(end):
+            raise ValueError("Contract change in url");
+        return full[len(start):-len(end)];
     print(
-      [name[14:-4] for name in
+      [get_middle(name, start, end) for name in
           re.findall(
-            r'homeassistant-[\d.]+.tar',
-            requests.get('https://pypi.org/simple/homeassistant').text
+            start + r'[\d.]+' + end,
+            requests.get(url).text
           )
       ][-1])"
   scan_interval: 06:00:00
@@ -51,10 +58,8 @@
     # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:
       friendly_name: 'Morgen lichtwekker'
-      # Time trigger can be removed starting from 0.117
       value_template: >-
         {% set wd = now().weekday() %}
-        {% set trigger = states('sensor.time') %}
         {% if states.input_boolean.wakeup_enabled.state == 'on' %}
           {% if (4 < wd + 1 < 7 or wd + 1 == 2) %}
             {% if states.input_boolean.wakeup_weekend.state == 'on' %}
@@ -78,9 +83,8 @@
           Unexpected value for alarm
         {% endif %}
     # Additional time sensor: before or after noon
-    noon:  # Trigger can be removed starting form 0.117
+    noon:
       value_template: >-
-        {% set trigger = states('sensor.time') %}
         {% if (now().strftime("%H")|int) >= 12 %}
           After
         {% else %}

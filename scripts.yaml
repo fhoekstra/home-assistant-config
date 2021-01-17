@@ -51,6 +51,9 @@ do_wake_up_lights:
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - delay:
       seconds: '{{ (((transition | float * 60 ) / 3) | int) }}'
+  - condition: state
+    entity_id: input_boolean.wakeup_enabled
+    state: 'on'
   - service: script.fade_in_ikea_light
     data_template:
       entity_id: light.nachtkastje
@@ -58,6 +61,9 @@ do_wake_up_lights:
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - delay:
       seconds: '{{ (((transition | float * 60 ) / 3) | int) }}'
+  - condition: state
+    entity_id: input_boolean.wakeup_enabled
+    state: 'on'
   - service: script.fade_in_ikea_light
     data_template:
       entity_id: light.slaapkamer_plafond
@@ -65,43 +71,9 @@ do_wake_up_lights:
       transition: '{{ (((transition | float * 60 ) / 3) | int) }}'
   - delay:
       seconds: '{{ (((transition | float * 60) / 3) | int) }}'
+  - condition: state
+    entity_id: input_boolean.wakeup_enabled
+    state: 'on'
   - service: switch.turn_on
     data:
       entity_id: switch.ochtend_lamp
-freek_morning:
-  sequence:
-  - service: script.turn_on_ikea_light
-    data:
-      entity_id:
-      - light.woonkamer
-      - light.wc
-      - light.badkamer
-      kelvin: 4000
-      brightness_pct: 100
-  - delay:
-      seconds: 2
-  - service: light.turn_off
-    data:
-      entity_id:
-      - light.wc
-      - light.badkamer
-freek_evening:
-  sequence:
-  - data:
-      brightness: 1
-      entity_id: light.nachtkastje
-      transition: 300
-    service: light.turn_on
-  - delay: 00:00:01
-  - data:
-      brightness: 1
-      entity_id:
-      - light.wc
-    service: light.turn_on
-  - delay: 00:00:01
-  - data:
-      entity_id:
-      - light.wc
-      - light.gang
-      - light.slaapkamer_plafond
-    service: light.turn_off

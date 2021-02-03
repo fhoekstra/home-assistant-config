@@ -3,19 +3,21 @@
 time_color = {'Day': 4000, 'Evening': 2700, 'Night': 2200}
 
 # define transition time in seconds
-transition_time = 180
+default_transition_time = 180
 
 # define which lights to adjust for each time_of_day
-normal_groups = ['slaapkamer', 'gang', 'gang', 'wc', 'badkamer', 'woonkamer']
-excludes = {'Day': ['slaapkamer', 'gang'], 'Evening': [], 'Night':[]}
+slaapkamer_lights = ('slaapkamer_plafond', 'nachtkastje')
+normal_groups = (*slaapkamer_lights, 'gang', 'gang', 'wc', 'badkamer', 'woonkamer')
+excludes = {'Day': (*slaapkamer_lights, 'gang'), 'Evening': (), 'Night':()}
 
 # brightness patterns
-extreme_adjust = {'Day': 100, 'Evening': 40, 'Night': 1, 'time': 10}
-morning_full = {'Day': 100}
+dark_at_night = {'Day': 100, 'Evening': 40, 'Night': 1, 'transition_time': 10}
+morning_full = {'Day': 100, 'transition_time': 10}
 
 # global entity_id : brightness pattern mapping
 brightadjust = {
-    'light.wc': extreme_adjust,
+    'light.wc': dark_at_night,
+    'nachtkastje': dark_at_night,
     'light.woonkamer': morning_full,
     'light.badkamer': morning_full,
     }
@@ -23,7 +25,7 @@ brightadjust = {
 # process settings, prepare dicts
 adjust_groups = {}
 for t in time_color.keys():
-    adjust_groups[t] = [gr for gr in normal_groups]
+    adjust_groups[t] = list(normal_groups)
     for excl in excludes[t]:
         if excl in adjust_groups[t]:
             adjust_groups[t].pop(adjust_groups[t].index(excl))
@@ -43,14 +45,14 @@ def set_brightness_pct(service_data, entity_id, set_time=False):
         return
 
     pattern = brightadjust[entity_id]
-    
+
     if not time_of_day in pattern:
         return
 
     service_data['brightness_pct'] = pattern[time_of_day]
 
     if set_time:
-        service_data['transition'] = pattern.get('time', transition_time)
+        service_data['transition'] = pattern.get('transition_time', default_transition_time)
 
 
 offlights = []
@@ -65,7 +67,7 @@ for lightgroup in adjust_groups[time_of_day]:
     else:
         logger.warning(f"act_time.py: weird state {state.state} of entity {entity_id}")
 
-logger.debug("These lights are off: "+str(offlights))
+logger.debug(f"These lights are off: {offlights}")
 
 # Turn on all lights (for partially on rooms and off lights)
 hass.services.call('light', 'turn_on', {'entity_id': 'all'})
@@ -89,15 +91,14 @@ for entity_id in offlights:
         time.sleep(0.2)
 hass.services.call('light', 'turn_off', {'entity_id': offlights})
 
-# Wait 10 seconds
-time.sleep(10)
+time.sleep(5)
 
 # Start transitioning the color of the on lights
 for entity_id in onlights:
     service_data = {
         'entity_id': entity_id,
         'kelvin': time_color[time_of_day],
-        'transition': transition_time
+        'transition': default_transition_time
         }
     set_brightness_pct(service_data, entity_id, set_time=True)
     hass.services.call('light', 'turn_on', service_data)

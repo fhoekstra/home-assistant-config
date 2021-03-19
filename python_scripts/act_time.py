@@ -11,15 +11,18 @@ normal_groups = (*slaapkamer_lights, 'gang', 'gang', 'wc', 'badkamer', 'woonkame
 excludes = {'Day': (*slaapkamer_lights, 'gang'), 'Evening': (), 'Night':()}
 
 # brightness patterns
-dark_at_night = {'Day': 100, 'Evening': 40, 'Night': 1, 'transition_time': 10}
-morning_full = {'Day': 100, 'transition_time': 10}
+fast_transition_seconds = 10
+dark_at_night = {'Day': 100, 'Evening': 40, 'Night': 1, 'transition_time': fast_transition_seconds}
+morning_full = {'Day': 100, 'transition_time': fast_transition_seconds}
+less_bright_at_night = {'Day': 100, 'Night': 70, 'transition_time': fast_transition_seconds}
 
 # global entity_id : brightness pattern mapping
 brightadjust = {
     'light.wc': dark_at_night,
-    'nachtkastje': dark_at_night,
+    'light.nachtkastje': dark_at_night,
+    'light.gang': dark_at_night,
+    'light.badkamer': less_bright_at_night,
     'light.woonkamer': morning_full,
-    'light.badkamer': morning_full,
     }
 
 # process settings, prepare dicts

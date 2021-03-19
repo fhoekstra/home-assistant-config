@@ -12,21 +12,7 @@
   # change the regex pattern from r'homeassistant-[\d.]+.tar'
   # to r'homeassistant-[b\d.]+.tar'
   command: >-
-    python3 -c "import requests; import re;
-    url = 'https://pypi.org/simple/homeassistant'
-    start = 'homeassistant-';
-    end = '.tar.gz';
-    def get_middle(full, start, end):
-        if not full.startswith(start) and full.endswith(end):
-            raise ValueError("Contract change in url");
-        return full[len(start):-len(end)];
-    print(
-      [get_middle(name, start, end) for name in
-          re.findall(
-            start + r'[\d.]+' + end,
-            requests.get(url).text
-          )
-      ][-1])"
+    python3 -c "import requests; import re; start = 'homeassistant-'; end = '.tar.gz'; print(re.findall(start + r'[\d.]+' + end, requests.get('https://pypi.org/simple/homeassistant').text)[-1][len(start):-len(end)])"
   scan_interval: 06:00:00
 # Time of day sensor
 # To test this template, add .replace(hour=5, minute=15) after t = now().time()

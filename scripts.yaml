@@ -77,3 +77,8 @@ do_wake_up_lights:
   - service: switch.turn_on
     data:
       entity_id: switch.ochtend_lamp
+send_message_c:
+  sequence:
+  - service: notify.teledobbygf
+    data_template: 
+      message: '{{message}}'

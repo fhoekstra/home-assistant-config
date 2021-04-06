@@ -1,18 +1,18 @@
-- id: '1565175229727'
+- id: "1565175229727"
   alias: Telegram turn lights off
   trigger:
-  - event_data:
-      command: /lightsoff
-    event_type: telegram_command
-    platform: event
+    - event_data:
+        command: /lightsoff
+      event_type: telegram_command
+      platform: event
   action:
-  - service: telegram_bot.send_message
-    data_template:
-      target: "{{trigger.event.data.chat_id}}"
-      message: >
-        {{(["Ik ga meteen aan de slag!", "Komt in orde",
-        "Ik doe het direct", "Ja, meester"]| random)}}
-  - service: script.turn_all_lights_off
+    - service: telegram_bot.send_message
+      data_template:
+        target: "{{trigger.event.data.chat_id}}"
+        message: >
+          {{(["Ik ga meteen aan de slag!", "Komt in orde",
+          "Ik doe het direct", "Ja, meester"]| random)}}
+    - service: script.turn_all_lights_off
 - alias: Update notification
   initial_state: True
   trigger:
@@ -20,28 +20,28 @@
       entity_id: sensor.latest_ha_version
   action:
     - service: notify.teledobbyme
-      data_template: 
+      data_template:
         title: "New Home Assistant Release"
         message: |
           Home Assistant {{ states.sensor.latest_ha_version.state }} is nu beschikbaar.
-          
+
           https://www.home-assistant.io/blog/categories/release-notes/
-- id: '1666175229111'
+- id: "1666175229111"
   alias: Dankjewel Dobby
   trigger:
-  - platform: event
-    event_type: telegram_text
+    - platform: event
+      event_type: telegram_text
   condition:
-  - condition: template
-    value_template: >
-      {% set text = trigger.event.data.text %}
-      {{(('Dank' in text) or ('dank' in text)
-         or ('thank' in text) or ('thx' in text))}}
+    - condition: template
+      value_template: >
+        {% set text = trigger.event.data.text %}
+        {{(('Dank' in text) or ('dank' in text)
+          or ('thank' in text) or ('thx' in text))}}
   action:
-  - service: telegram_bot.send_message
-    data_template:
-      target: "{{trigger.event.data.chat_id}}"
-      message: >
-        {{(["Graag gedaan!", "Ik doe het graag!",
-        "Graag gedaan!", "Voor jou altijd!",
-        "Ach, het stelt niks voor!"]| random)}}
+    - service: telegram_bot.send_message
+      data_template:
+        target: "{{trigger.event.data.chat_id}}"
+        message: >
+          {{(["Graag gedaan!", "Ik doe het graag!",
+          "Graag gedaan!", "Voor jou altijd!",
+          "Ach, het stelt niks voor!"] | random)}}

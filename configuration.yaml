@@ -84,29 +84,9 @@ input_number:
 # Light groups
 light:
   - platform: group
-    name: slaapkamer
-    entities:
-      - light.nachtkastje
-      - light.slaapkamer_plafond
-  - platform: group
-    name: woonkamer
-    entities:
-      - light.bureau
-      - light.keuken_deurkant
-      - light.keuken_koelkastkant
-      - light.hoek_woonkamer
-  - platform: group
-    name: keuken
-    entities:
-      - light.keuken_deurkant
-      - light.keuken_koelkastkant
-  - platform: group
     name: all_lights
     entities:
-      - light.bureau
-      - light.keuken_deurkant
-      - light.keuken_koelkastkant
-      - light.hoek_woonkamer
+      - light.woonkamer
       - light.nachtkastje
       - light.slaapkamer_plafond
       - light.gang

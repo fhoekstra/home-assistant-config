@@ -27,17 +27,7 @@
         command: "/setremind"
   condition: []
   action:
-    - service: telegram_bot.send_message
+    - service: script.remind_telegram
       data_template:
-        target: "{{trigger.event.data.chat_id}}"
-        message: >
-          OK, ik herinner {{trigger.event.data.from_first}}
-          over {{trigger.event.data.data[11:]}}
-    - delay:
-        minutes: "{{ ((trigger.event.data.data[10:-1]|float*60)|int) }}"
-    - service: telegram_bot.send_message
-      data_template:
-        target: "{{trigger.event.data.chat_id}}"
-        message: >-
-          {{trigger.event.data.from_first}},
-          het is nu {{trigger.event.data.data[11:]}} later.
+        chat_id: "{{trigger.event.data.chat_id}}"
+        hours: "{{trigger.event.data.data[10:-1]}}"

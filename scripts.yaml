@@ -82,3 +82,28 @@ send_message_c:
   - service: notify.teledobbygf
     data_template: 
       message: '{{message}}'
+remind_telegram:
+  mode: parallel
+  sequence:
+    - service: telegram_bot.send_message
+      data_template:
+        target: "{{chat_id}}"
+        message: >
+          OK, ik herinner je
+          over {{hours}} uur.
+    - delay:
+        minutes: "{{ ( (hours|float*60) |int ) }}"
+    - service: telegram_bot.send_message
+      data_template:
+        target: "{{chat_id}}"
+        message: >-
+          Het is nu {{hours}} uur later.
+
+remind_both_telegram:
+  mode: parallel
+  sequence:
+    - service: script.remind_telegram
+      data_template:
+        chat_id: !secret home_group_telegram_id
+        hours: "{{hours}}"
+  

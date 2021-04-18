@@ -1,7 +1,7 @@
 # Time sensor
 - platform: time_date
   display_options:
-    - 'time'
+    - "time"
 # Latest HA version sensor, for notifications of new updates
 # based on VDRainer's idea: https://community.home-assistant.io/t/update-notification-automation-not-working/117043/4
 - platform: command_line
@@ -43,7 +43,7 @@
         {% endif %}
     # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:
-      friendly_name: 'Morgen lichtwekker'
+      friendly_name: "Morgen lichtwekker"
       value_template: >-
         {% set wd = now().weekday() %}
         {% if states.input_boolean.wakeup_enabled.state == 'on' %}
@@ -51,7 +51,7 @@
             {% if states.input_boolean.wakeup_weekend.state == 'on' %}
               {% set alarm = 'on' %}
             {% else %}
-               {% set alarm = 'off' %}
+              {% set alarm = 'off' %}
             {% endif %}
           {% else %}
             {% set alarm = 'on' %}
@@ -68,6 +68,26 @@
         {% else %}
           Unexpected value for alarm
         {% endif %}
+    lightsalarmtoday:
+      friendly_name: "Vandaag lichtwekker"
+      value_template: >-
+        {% set wd = now().weekday() %}
+        {% if states.input_boolean.wakeup_enabled.state == 'on' %}
+          {% if (4 < wd < 7 or wd == 2) %}
+            {% if states.input_boolean.wakeup_weekend.state == 'on' %}
+              {% set alarm = 'on' %}
+            {% else %}
+              {% set alarm = 'off' %}
+            {% endif %}
+          {% else %}
+            {% set alarm = 'on' %}
+          {%endif%}
+        {% elif states.input_boolean.wakeup_enabled.state == 'off' %}
+          {% set alarm = 'off' %}
+        {% else %}
+          Unexpected value for states.input_boolean.wakeup_enabled.state
+        {% endif %}
+        {{alarm}}
     # Additional time sensor: before or after noon
     noon:
       value_template: >-

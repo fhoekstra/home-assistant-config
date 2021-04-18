@@ -78,6 +78,7 @@ do_wake_up_lights:
     data:
       entity_id: switch.ochtend_lamp
 send_message_c:
+  mode: parallel
   sequence:
   - service: notify.teledobbygf
     data_template: 

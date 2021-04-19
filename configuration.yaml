@@ -35,10 +35,13 @@ input_boolean:
   auto_color_enabled:
     name: "Kleurverloop"
     initial: on
-    icon: mdi:weather-sunset
+    icon: mdi:palette
   vacation:
     name: "Vakantie"
     icon: mdi:tent
+  wake_up_in_progress:
+    name: "Lichtwekker bezig"
+    icon: mdi:weather-sunset-up
 
 input_datetime:
   morning_start_time:

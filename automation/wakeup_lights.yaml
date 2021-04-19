@@ -21,9 +21,7 @@
       - thu
       - fri
   action:
-  - data_template:
-      transition: '{{states.input_number.wakeup_time_transition.state}}'
-    service: script.do_wake_up_lights
+  - event: wake_up_lights_start_trigger
 - alias: Change wake-up time based on sliders
   id: '1565175229702'
   trigger:

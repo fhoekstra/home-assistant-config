@@ -1,8 +1,10 @@
-*
-*/
+blueprints
 
 secrets.*
 secrets.yaml
+*.token
+ip_bans.yaml
+known_devices.yaml
 
 .storage/
 .storage/*
@@ -19,3 +21,17 @@ secrets.yaml
 !automation/
 !automation/*
 !.HA_VERSION
+
+node-red/*
+node-red/.*
+node-red/*_cred*
+package-lock.json
+node-red/package.json
+!node_red/flows.json
+
+
+.vscode
+*.log
+*.db
+
+google_calendars.yaml

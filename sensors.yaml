@@ -66,7 +66,7 @@
         {%-set year = timedelta(days=365) -%}
         
         {%-set offset = 1.25*hour + 0.75*hour*cos(2*pi*days/year) -%}
-        {%-set night_time = evenging_time + offset -%}
+        {%-set night_time = evening_time + offset -%}
         {{night_time.strftime('%H:%M')}}
     # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:

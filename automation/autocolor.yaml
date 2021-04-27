@@ -11,3 +11,20 @@
   - data_template:
       time_of_day: '{{states.sensor.time_of_day.state}}'
     service: python_script.act_time
+- alias: Change autocolor time based on sensors
+  id: '1561234229702'
+  trigger:
+  - platform: state
+    entity_id: sensor.evening_auto_time
+  - platform: state
+    entity_id: sensor.night_auto_time
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.early_eve_start_time
+      time: "{{ states('sensor.evening_auto_time') }}"
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.night_start_time
+      time: "{{ states('sensor.night_auto_time') }}"

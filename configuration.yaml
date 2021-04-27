@@ -30,7 +30,7 @@ input_boolean:
     icon: mdi:theme-light-dark
   wakeup_weekend:
     name: "Weekend"
-    initial: on # uncomment to reset the value at restart
+    initial: on
     icon: mdi:calendar-blank
   auto_color_enabled:
     name: "Kleurverloop"
@@ -48,7 +48,6 @@ input_datetime:
     name: "Ochtend"
     has_time: true
     has_date: false
-    #initial: "07:30" # comment to not reset the value at restart
   early_eve_start_time:
     name: "Avond"
     has_time: true

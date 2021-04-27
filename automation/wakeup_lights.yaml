@@ -25,6 +25,8 @@
 - alias: Change wake-up time based on sliders
   id: '1565175229702'
   trigger:
+  - platform: homeassistant
+    event: start
   - platform: state
     entity_id: input_number.morning_start_hour
   - platform: state

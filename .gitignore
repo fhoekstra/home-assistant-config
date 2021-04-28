@@ -33,5 +33,7 @@ node-red/package.json
 .vscode
 *.log
 *.db
+__pycache__
+compiled
 
 google_calendars.yaml

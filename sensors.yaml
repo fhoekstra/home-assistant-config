@@ -41,33 +41,6 @@
         {% else %}
           Night
         {% endif %}
-    evening_auto_time:
-      friendly_name: Evening time based on sunset and seasonal offset
-      value_template: >-
-        {%-set sunset_str = state_attr('sun.sun', 'next_setting') -%}
-        {%-set sunset = now().fromisoformat(sunset_str) -%}
-        {%-set today = now().replace(tzinfo=None, hour=0, minute=0, second=0, microsecond=0) -%}
-        {%-set this_year = strptime('{}'.format(today.year), '%Y') -%}
-        {%-set days = today - this_year -%}
-        {%-set hour = timedelta(hours=1) -%}
-        {%-set year = timedelta(days=365) -%}
-
-        {%-set offset = 1*hour + 1.5*hour * cos(2*pi*days/year) -%}
-        {%-set evening_time = sunset + offset -%}
-        {{evening_time.strftime('%H:%M')}}
-    night_auto_time: # Nachttijd = avondtijd + 1.25u + 0.75u*cos(2πt)
-      friendly_name: Night time based on evening time and seasonal offset
-      value_template: >-
-        {%-set evening_time = strptime(states(sensor.evening_auto_time), '%H:%M') -%}
-        {%-set today = now().replace(tzinfo=None, hour=0, minute=0, second=0, microsecond=0) -%}
-        {%-set this_year = strptime('{}'.format(today.year), '%Y') -%}
-        {%-set days = today - this_year -%}
-        {%-set hour = timedelta(hours=1) -%}
-        {%-set year = timedelta(days=365) -%}
-        
-        {%-set offset = 1.25*hour + 0.75*hour*cos(2*pi*days/year) -%}
-        {%-set night_time = evening_time + offset -%}
-        {{night_time.strftime('%H:%M')}}
     # Sensor to tell if, and if so, at what time light alarm triggers
     lightsalarmtomorrow:
       friendly_name: "Morgen lichtwekker"

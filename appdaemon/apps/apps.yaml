@@ -1,0 +1,7 @@
+---
+hello_world:
+  module: hello
+  class: HelloWorld
+set_color_change_time:
+  module: set_color_change_time
+  class: ColorChangeTimer

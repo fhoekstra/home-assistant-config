@@ -1,10 +1,12 @@
 from datetime import datetime, date, timedelta, timezone
 from datetime import time
 from math import cos, pi
-from typing import Tuple
+from typing import Callable, Any
 
 import hassapi as hass
 
+MIN_EVENING_TIME_UTC = time(hour=18)
+MAX_EVENING_TIME_UTC = time(hour=22)
 
 SHORTEST_DAY_OF_MONTH = 21
 SHORTEST_DAY_MONTH = 12
@@ -12,14 +14,22 @@ YEAR = timedelta(days=365)
 HOUR = timedelta(hours=1)
 
 
+# noinspection PyAttributeOutsideInit
 class ColorChangeTimer(hass.Hass):
 
     def initialize(self):
-        in_one_minute = self.datetime() + timedelta(minutes=1)
-        one_minute_in_seconds = 60
-        self.run_every(self.set_times,
-                       start=in_one_minute,
-                       interval=5*one_minute_in_seconds)
+        self.max_evening_time_utc = to_timedelta(MAX_EVENING_TIME_UTC)
+        self.min_evening_time_utc = to_timedelta(MIN_EVENING_TIME_UTC)
+
+        self._my_run_every(callback=self.set_times,
+                           start=self.datetime() + timedelta(minutes=1),
+                           interval=timedelta(minutes=5))
+
+    def set_times(self, kwargs):
+        if not self.is_switched_on():
+            return
+        evening_time = self.set_evening_time()
+        self.set_night_time(evening_time)
 
     def is_switched_on(self):
         switch_state = self.get_state(
@@ -28,22 +38,16 @@ class ColorChangeTimer(hass.Hass):
         self.log(f'{switch_state=}')
         return switch_state == 'on'
 
-    def set_times(self, kwargs):
-        if not self.is_switched_on():
-            return
-        self.set_evening_time(kwargs)
-        self.set_night_time(kwargs)
-
-    def set_evening_time(self, kwargs):
-        self.max_evening_time_utc = time(hour=22)
-        self.min_evening_time_utc = time(hour=18)
-        now = get_now_with_timezone()
+    def set_evening_time(self) -> datetime:
+        now = self._get_now_with_timezone()
         self.evening_time = self.get_evening_time(now)
         formatted_time = self.evening_time.strftime('%H:%M:00')
         self.call_service(
             'input_datetime/set_datetime',
             entity_id='input_datetime.early_eve_start_time',
             time=formatted_time)
+        self.log(f'Set evening time to {formatted_time}')
+        return self.evening_time
 
     def get_evening_time(self, now: datetime) -> datetime:
         """
@@ -62,17 +66,17 @@ class ColorChangeTimer(hass.Hass):
         evening_time_local = evening_time_utc.astimezone(now.tzinfo)
         return evening_time_local
 
-    def set_night_time(self, kwargs):
-        now = get_now_with_timezone()
-        self.night_time = self.get_night_time(now)
+    def set_night_time(self, evening_time: datetime):
+        self.night_time = self.get_night_time(evening_time)
         formatted_time = self.night_time.strftime('%H:%M:00')
         self.call_service(
             'input_datetime/set_datetime',
             entity_id='input_datetime.night_start_time',
             time=formatted_time)
+        self.log(f'Set night time to {formatted_time}')
 
-    def get_night_time(self, now: datetime) -> time:
-        today = now.date()
+    def get_night_time(self, evening_time: datetime) -> datetime:
+        today = evening_time.date()
         time_since_solstice: timedelta = today - get_shortest_day_in(today.year)
 
         offset = 1.25*HOUR + 0.75*HOUR * cos(2*pi*time_since_solstice/YEAR)
@@ -80,19 +84,17 @@ class ColorChangeTimer(hass.Hass):
 
     @property
     def evening_amplitude(self) -> timedelta:
-        max_time = to_timedelta(self.max_evening_time_utc)
-        min_time = to_timedelta(self.min_evening_time_utc)
-        return (max_time - min_time) / 2
+        return (self.max_evening_time_utc - self.min_evening_time_utc) / 2
 
     @property
     def evening_average(self) -> timedelta:
-        max_time = to_timedelta(self.max_evening_time_utc)
-        min_time = to_timedelta(self.min_evening_time_utc)
-        return (max_time + min_time) / 2
+        return (self.max_evening_time_utc + self.min_evening_time_utc) / 2
 
+    def _get_now_with_timezone(self):
+        return self.datetime().astimezone()
 
-def get_now_with_timezone():
-    return datetime.now().astimezone()
+    def _my_run_every(self, callback: Callable[[dict], Any], start: datetime, interval: timedelta, **kwargs):
+        self.run_every(callback, start=start, interval=interval.total_seconds(), **kwargs)
 
 
 def to_midnight_utc(now: datetime) -> datetime:

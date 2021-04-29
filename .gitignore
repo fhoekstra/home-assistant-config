@@ -31,6 +31,7 @@ node-red/package.json
 
 
 .vscode
+.idea
 *.log
 *.db
 __pycache__

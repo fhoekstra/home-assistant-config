@@ -93,8 +93,10 @@ class ColorChangeTimer(hass.Hass):
     def _get_now_with_timezone(self):
         return self.datetime().astimezone()
 
-    def _my_run_every(self, callback: Callable[[dict], Any], start: datetime, interval: timedelta, **kwargs):
-        self.run_every(callback, start=start, interval=interval.total_seconds(), **kwargs)
+    def _my_run_every(self, callback: Callable[[dict], Any], start: datetime,
+                      interval: timedelta, **kwargs):
+        self.run_every(callback, start=start,
+                       interval=interval.total_seconds(), **kwargs)
 
 
 def to_midnight_utc(now: datetime) -> datetime:

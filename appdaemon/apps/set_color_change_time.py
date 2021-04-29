@@ -21,7 +21,16 @@ class ColorChangeTimer(hass.Hass):
                        start=in_one_minute,
                        interval=5*one_minute_in_seconds)
 
+    def is_switched_on(self):
+        switch_state = self.get_state(
+            entity_id='input_boolean.automatic_color_time_adjustment',
+            attribute='state')
+        self.log(f'{switch_state=}')
+        return switch_state == 'on'
+
     def set_times(self, kwargs):
+        if not self.is_switched_on():
+            return
         self.set_evening_time(kwargs)
         self.set_night_time(kwargs)
 
@@ -38,18 +47,16 @@ class ColorChangeTimer(hass.Hass):
 
     def get_evening_time(self, now: datetime) -> datetime:
         """
-        now as datetime in the local timezone, and aware, i.e. have the local 
+        now as datetime in the local timezone, and aware, i.e. have the local
             timezone as tzinfo attribute
         min_time_utc and max_time_utc time at which to change color on shortest
             and longest day, in utc
         """
         time_since_solstice = now.date() - get_shortest_day_in(now.year)
-        amplitude, average = get_amplitude_and_average_from_extrema(
-            self.max_evening_time_utc,
-            self.min_evening_time_utc)
 
         desired_time_in_utc: timedelta = \
-            average + amplitude * cos(2 * pi * time_since_solstice / YEAR)
+            self.evening_average \
+            + self.evening_amplitude * cos(2 * pi * time_since_solstice / YEAR)
 
         evening_time_utc = to_midnight_utc(now) + desired_time_in_utc
         evening_time_local = evening_time_utc.astimezone(now.tzinfo)
@@ -63,13 +70,25 @@ class ColorChangeTimer(hass.Hass):
             'input_datetime/set_datetime',
             entity_id='input_datetime.night_start_time',
             time=formatted_time)
-        
+
     def get_night_time(self, now: datetime) -> time:
         today = now.date()
         time_since_solstice: timedelta = today - get_shortest_day_in(today.year)
 
         offset = 1.25*HOUR + 0.75*HOUR * cos(2*pi*time_since_solstice/YEAR)
         return self.evening_time + offset
+
+    @property
+    def evening_amplitude(self) -> timedelta:
+        max_time = to_timedelta(self.max_evening_time_utc)
+        min_time = to_timedelta(self.min_evening_time_utc)
+        return (max_time - min_time) / 2
+
+    @property
+    def evening_average(self) -> timedelta:
+        max_time = to_timedelta(self.max_evening_time_utc)
+        min_time = to_timedelta(self.min_evening_time_utc)
+        return (max_time + min_time) / 2
 
 
 def get_now_with_timezone():
@@ -85,14 +104,6 @@ def get_shortest_day_in(year: int) -> date:
     return date(year=year,
                 month=SHORTEST_DAY_MONTH,
                 day=SHORTEST_DAY_OF_MONTH)
-
-
-def get_amplitude_and_average_from_extrema(max_time: time, min_time: time) -> Tuple[timedelta, timedelta]:
-    max_time = to_timedelta(max_time)
-    min_time = to_timedelta(min_time)
-    average: timedelta = (max_time + min_time) / 2
-    amplitude: timedelta = (max_time - min_time) / 2
-    return amplitude, average
 
 
 def to_timedelta(naive_time: time) -> timedelta:

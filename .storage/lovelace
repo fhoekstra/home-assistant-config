@@ -138,6 +138,77 @@
                     "badges": [],
                     "cards": [
                         {
+                            "entities": [
+                                {
+                                    "entity": "input_boolean.wakeup_enabled"
+                                },
+                                {
+                                    "entity": "input_number.wakeup_time_transition"
+                                },
+                                {
+                                    "entity": "light.all_lights"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Instellingen Lampen",
+                            "type": "entities"
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "input_boolean.auto_color_enabled"
+                                },
+                                {
+                                    "entity": "input_boolean.automatic_color_time_adjustment"
+                                }
+                            ],
+                            "title": "Kleurverandering lampen",
+                            "show_header_toggle": false
+                        },
+                        {
+                            "type": "conditional",
+                            "conditions": [
+                                {
+                                    "entity": "input_boolean.automatic_color_time_adjustment",
+                                    "state": "on"
+                                }
+                            ],
+                            "card": {
+                                "type": "glance",
+                                "entities": [
+                                    {
+                                        "entity": "input_datetime.early_eve_start_time"
+                                    },
+                                    {
+                                        "entity": "input_datetime.night_start_time"
+                                    }
+                                ],
+                                "title": "Tijden kleurverandering"
+                            }
+                        },
+                        {
+                            "type": "conditional",
+                            "conditions": [
+                                {
+                                    "entity": "input_boolean.automatic_color_time_adjustment",
+                                    "state": "off"
+                                }
+                            ],
+                            "card": {
+                                "type": "entities",
+                                "entities": [
+                                    {
+                                        "entity": "input_datetime.early_eve_start_time"
+                                    },
+                                    {
+                                        "entity": "input_datetime.night_start_time"
+                                    }
+                                ],
+                                "title": "Tijden kleurverandering"
+                            }
+                        },
+                        {
                             "entity": "input_boolean.vacation",
                             "hold_action": {
                                 "action": "more-info"
@@ -153,31 +224,6 @@
                                 }
                             },
                             "type": "button"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "input_boolean.wakeup_enabled"
-                                },
-                                {
-                                    "entity": "input_number.wakeup_time_transition"
-                                },
-                                {
-                                    "entity": "input_boolean.auto_color_enabled"
-                                },
-                                {
-                                    "entity": "input_datetime.early_eve_start_time"
-                                },
-                                {
-                                    "entity": "input_datetime.night_start_time"
-                                },
-                                {
-                                    "entity": "light.all_lights"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Instellingen Lampen",
-                            "type": "entities"
                         }
                     ],
                     "icon": "",

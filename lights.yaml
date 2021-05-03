@@ -1,0 +1,30 @@
+- platform: template
+  lights:
+    ochtend_lamp:
+      friendly_name: ochtend lamp
+      value_template: "{{ states('switch.ochtend_lamp') }}"
+      turn_on:
+        service: switch.turn_on
+        entity_id: switch.ochtend_lamp
+      turn_off:
+        service: switch.turn_off
+        entity_id: switch.ochtend_lamp
+- platform: group
+  name: all_lights
+  entities:
+    - light.woonkamer
+    - light.nachtkastje
+    - light.slaapkamer_plafond
+    - light.gang
+    - light.wc
+    - light.badkamer
+    - light.ochtend_lamp
+- platform: group
+  name: all_lights_except_ochtend_lamp
+  entities:
+    - light.woonkamer
+    - light.nachtkastje
+    - light.slaapkamer_plafond
+    - light.gang
+    - light.wc
+    - light.badkamer

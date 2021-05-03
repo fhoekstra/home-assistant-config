@@ -12,7 +12,9 @@
         message: >
           {{(["Ik ga meteen aan de slag!", "Komt in orde",
           "Ik doe het direct", "Ja, meester"]| random)}}
-    - service: script.turn_all_lights_off
+    - service: light.turn_off
+      data:
+        entity_id: all
 - alias: Update notification
   initial_state: True
   trigger:

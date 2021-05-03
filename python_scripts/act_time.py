@@ -73,7 +73,9 @@ for lightgroup in adjust_groups[time_of_day]:
 logger.debug(f"These lights are off: {offlights}")
 
 # Turn on all lights (for partially on rooms and off lights)
-hass.services.call('light', 'turn_on', {'entity_id': 'all'})
+hass.services.call(
+    'light', 'turn_on',
+    {'entity_id': 'light.all_lights_except_ochtend_lamp'})
 time.sleep(1.0)
 
 # Change color of off lights

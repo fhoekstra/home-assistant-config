@@ -82,7 +82,9 @@
   - service: input_boolean.turn_on
     data:
       entity_id: input_boolean.vacation
-  - service: script.turn_all_lights_off
+  - service: light.turn_off
+    data:
+      entity_id: all
   - service: input_boolean.turn_off
     data:
       entity_id: input_boolean.wakeup_enabled

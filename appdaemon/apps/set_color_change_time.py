@@ -21,9 +21,25 @@ class ColorChangeTimer(hass.Hass):
         self.max_evening_time_utc = to_timedelta(MAX_EVENING_TIME_UTC)
         self.min_evening_time_utc = to_timedelta(MIN_EVENING_TIME_UTC)
 
-        self._my_run_every(callback=self.set_times,
-                           start=self.datetime() + timedelta(minutes=1),
-                           interval=timedelta(minutes=5))
+        self.run_callback_on_change_of(
+            self.on_input_change,
+            (
+                'input_boolean.automatic_color_time_adjustment',
+                'input_datetime.early_eve_start_time',
+                'input_datetime.night_start_time',
+            ))
+
+        self._my_run_every(
+            callback=self.set_times,
+            start=self.datetime() + timedelta(minutes=1),
+            interval=timedelta(hours=2, minutes=7))
+
+    def run_callback_on_change_of(self, callback: Callable, entity_ids: list):
+        for entity_id in entity_ids:
+            self.listen_state(callback, entity_id)
+
+    def on_input_change(self, entity, attribute, old, new, kwargs):
+        self.set_times({})
 
     def set_times(self, kwargs):
         if not self.is_switched_on():

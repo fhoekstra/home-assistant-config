@@ -1,4 +1,4 @@
 ---
-set_color_change_time:
+autocolor_set_times:
   module: autocolor_set_times
   class: ColorChangeTimer

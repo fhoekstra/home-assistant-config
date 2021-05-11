@@ -2,3 +2,6 @@
 autocolor_set_times:
   module: autocolor_set_times
   class: ColorChangeTimer
+update_watch:
+  module: update_watch
+  class: UpdateWatcher

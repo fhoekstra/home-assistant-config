@@ -144,14 +144,11 @@
                                 },
                                 {
                                     "entity": "input_number.wakeup_time_transition"
-                                },
-                                {
-                                    "entity": "light.all_lights"
                                 }
                             ],
                             "show_header_toggle": false,
-                            "title": "Instellingen Lampen",
-                            "type": "entities"
+                            "type": "entities",
+                            "title": "Lichtwekker"
                         },
                         {
                             "type": "entities",
@@ -207,6 +204,17 @@
                                 ],
                                 "title": "Tijden kleurverandering"
                             }
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "light.all_lights_except_ochtend_lamp"
+                                },
+                                {
+                                    "entity": "light.all_lights"
+                                }
+                            ]
                         },
                         {
                             "entity": "input_boolean.vacation",

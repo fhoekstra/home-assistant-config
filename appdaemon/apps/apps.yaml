@@ -2,3 +2,9 @@
 autocolor_set_times:
   module: autocolor_set_times
   class: ColorChangeTimer
+autocolor_execution:
+  module: autocolor_execution
+  class: AutoColorController
+simple_for_testing:
+  module: simple_for_testing
+  class: SimpleForTesting

@@ -3,7 +3,7 @@ from datetime import time
 from math import cos, pi
 from typing import Callable, Any, Iterable
 
-import hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass
 
 MIN_EVENING_TIME_UTC = time(hour=18)
 MAX_EVENING_TIME_UTC = time(hour=22)
@@ -24,25 +24,20 @@ class ColorChangeTimer(hass.Hass):
         self.max_evening_time_utc = self.to_timedelta(MAX_EVENING_TIME_UTC)
         self.min_evening_time_utc = self.to_timedelta(MIN_EVENING_TIME_UTC)
 
-        self.run_callback_on_change_of(self.on_input_change, INPUTS)
-        self.listen_event(self.on_event, event='homeassistant.start')  # TODO: test if this works
+        self.run_callback_on_change_of_any(self.on_input_change, INPUTS)
 
-        self._my_run_every(
+        self.run_every(
             callback=self.set_times,
             start=self.datetime() + timedelta(minutes=1),
-            interval=timedelta(hours=2, minutes=7))
+            interval=timedelta(hours=2, minutes=7
+                               ).total_seconds())
 
-    def run_callback_on_change_of(self, callback: Callable, entity_ids: Iterable[str]):
+    def run_callback_on_change_of_any(self, callback: Callable, entity_ids: Iterable[str]):
         for entity_id in entity_ids:
             self.listen_state(callback, entity_id)
 
-    def on_event(self, event_name: str, data: dict, kwargs: dict):
-        delay = timedelta(minutes=5)
-        self.log(f'Detected HA startup, scheduling run in {delay}')
-        self._my_run_in(self.set_times, delay)
-
     def on_input_change(self, entity, attribute, old, new, kwargs):
-        self.set_times({})
+        self.set_times(kwargs)
 
     def set_times(self, kwargs):
         if not self.is_switched_on():
@@ -58,7 +53,7 @@ class ColorChangeTimer(hass.Hass):
         return switch_state == 'on'
 
     def set_evening_time(self) -> datetime:
-        now = self._get_now_with_timezone()
+        now: datetime = self.datetime(aware=True)
         self.evening_time = self.get_evening_time(now)
         formatted_time = self.evening_time.strftime('%H:%M:00')
         self.call_service(
@@ -79,7 +74,7 @@ class ColorChangeTimer(hass.Hass):
 
         desired_time_in_utc: timedelta = \
             self.evening_average \
-            + self.evening_amplitude * cos(2 * pi * time_since_solstice / YEAR)
+            + self.evening_amplitude * cos(2 * pi * time_since_solstice / timedelta(days=365))
 
         evening_time_utc = self.to_midnight_utc(now) + desired_time_in_utc
         evening_time_local = evening_time_utc.astimezone(now.tzinfo)
@@ -111,17 +106,6 @@ class ColorChangeTimer(hass.Hass):
     @property
     def evening_average(self) -> timedelta:
         return (self.max_evening_time_utc + self.min_evening_time_utc) / 2
-
-    def _get_now_with_timezone(self):
-        return self.datetime().astimezone()
-
-    def _my_run_every(self, callback: Callable[[dict], Any], start: datetime,
-                      interval: timedelta, **kwargs):
-        self.run_every(callback, start=start,
-                       interval=interval.total_seconds(), **kwargs)
-
-    def _my_run_in(self, callback: Callable[[dict], Any], delay: timedelta, **kwargs):
-        self.run_in(callback, delay, **kwargs)
 
     @staticmethod
     def to_midnight_utc(now: datetime) -> datetime:

@@ -8,7 +8,7 @@ Includes automations for the following use cases:
 
 * :zap: smart lights:
   * :snake: changing color temperature automatically based on time of day and of year
-  * :ocean: :camel: multi-stage wake-up light sequence, interruptable
+  * :thread: :camel: multi-stage wake-up light sequence, interruptable
   * :camel: Turning lights off while away from home
   * :calendar: :camel: Putting lights in vacation mode, prompted when an appropriate calendar event is detected
 * other:
@@ -40,8 +40,8 @@ I use the following components to implement this
 
 
 * Standard HA YAML (rhymes with :camel:) still has many of my automations, but I intend to move the bigger ones to one of the other platforms:
-* :ocean: **Node-Red** for flow-based automation
-  * Contains all functions of all buttons
+* :thread: **Node-Red** for flow-based automation
+  * Contains all functions of all :zap: buttons
 * :snake: **AppDaemon** for more programmatic automation using Python
   * Contains complex time logic
   * and the programmatic update notification logic

@@ -5,3 +5,6 @@ autocolor_set_times:
 update_watch:
   module: update_watch
   class: UpdateWatcher
+reminder_service:
+  module: reminder_service
+  class: ReminderService

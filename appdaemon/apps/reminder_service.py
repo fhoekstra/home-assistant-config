@@ -71,7 +71,7 @@ class ReminderService(hass.Hass):
         unsent_reminders = self.collection.find({'is_sent': False})
         for doc in unsent_reminders:
             record = ReminderRecord.decode(doc)
-            self.log(f'Found reminder to be scheduled at {record.send_at}')
+            self.log(f'Found unsent reminder that was scheduled for {record.send_at}')
             if record.send_at < self.now():
                 record.send_at = self.now() + timedelta(seconds=1)
                 record.message += f' (Originally scheduled to be sent at {record.send_at})'
@@ -80,6 +80,8 @@ class ReminderService(hass.Hass):
     def set_reminder(self, event_name, data, kwargs):
         self.log(f'Received event of type {event_name}')
         record = self.get_reminder_record(data)
+        if record.send_at < self.now():
+            record.send_at += timedelta(days=1)
         storage_id = self.collection.insert(record.encode())
         self.schedule_reminder(record.send_at, storage_id)
 

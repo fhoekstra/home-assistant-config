@@ -107,8 +107,8 @@ class ReminderService(hass.Hass):
         at_when = data.get("at", None)
         if at_when is not None:
             send_at_local = datetime.combine(
-                self.try_get_date(data),
-                self.try_get_time(data)
+                self.try_get_date(at_when),
+                self.try_get_time(at_when)
             ).astimezone()
             return send_at_local.astimezone(timezone.utc)
         raise ValueError("Data of ad_reminder_set event must contain 'in' or 'at' info")

@@ -66,6 +66,7 @@ class ReminderService(hass.Hass):
     def setup_storage(self):
         storage_client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
         self.collection = storage_client.ad_db.reminders
+        self.close_storage_conn = lambda: storage_client.close()
 
     def load_state(self):
         unsent_reminders = self.collection.find({'is_sent': False})
@@ -146,3 +147,6 @@ class ReminderService(hass.Hass):
 
     def today(self) -> date:
         return self.date()
+
+    def __del__(self):
+        self.close_storage_conn()

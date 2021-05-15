@@ -8,11 +8,11 @@ Includes automations for the following use cases:
 
 * [:zap:][4] smart lights:
   * changing color temperature automatically based on time of day and of year [:snake:][2]
-  * multi-stage wake-up light sequence, interruptable [:thread:][3] [:camel:][5]
+  * multi-stage wake-up light sequence, interruptable [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)][3] [:camel:][5]
   * Turning lights off while away from home [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1] [:camel:][5]
   * Putting lights in vacation mode, prompted when an appropriate calendar event is detected :calendar: :camel:
 * other:
-  * Reminders for when the washing machine is finished can be scheduled through a button next to the washing machine [:zap:][4] [:snake:][7] [![mongo_icon_20px](https://user-images.githubusercontent.com/32362869/118363357-46a5f280-b594-11eb-9fe9-076f73f2528a.png)][6] [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1]
+  * Reminders for when the washing machine is finished can be scheduled through a button next to the washing machine [:zap:][4] [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)][3] [:snake:][7] [![mongo_icon_20px](https://user-images.githubusercontent.com/32362869/118363357-46a5f280-b594-11eb-9fe9-076f73f2528a.png)][6] [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1]
   * The admin user is prompted when there are available updates [:snake:][2] :iphone:
 
 ## Components
@@ -40,7 +40,8 @@ I use the following components to implement this
 ### Add-ons for automation logic
 
 * [Standard HA YAML (rhymes with :camel:)][5] still has many of my automations, but I intend to move the bigger ones to one of the other platforms:
-* [:thread: **Node-Red**][3] for flow-based automation
+* [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)
+ **Node-Red**][3] for flow-based automation
   * Contains all functions of all :zap: buttons
 * [:snake: **AppDaemon**][2] for more programmatic automation using Python
   * Contains complex time logic

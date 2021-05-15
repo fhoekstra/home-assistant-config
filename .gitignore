@@ -5,6 +5,7 @@ secrets.yaml
 *.token
 ip_bans.yaml
 known_devices.yaml
+appdaemon.yaml
 
 .storage/
 .storage/*

@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime, timezone, time, date
+from typing import Dict, Any
 
 import appdaemon.plugins.hass.hassapi as hass
 from pymongo import MongoClient
@@ -15,6 +16,10 @@ class ReminderRecord:
 
     def __init__(self, message: str, send_at: datetime, send_to: str,
                  is_sent: bool, modified_on: datetime, _id=None):
+        """
+        send_at must be specified in local time. Translation to and from UTC for the database is handled by the
+        encode and decode methods.
+        """
         self.id_ = _id
         self.message = message
         self.send_at = send_at
@@ -31,12 +36,16 @@ class ReminderRecord:
                    is_sent=False,
                    modified_on=datetime.utcnow())
 
-    def encode(self):
+    @property
+    def notify_service(self) -> str:
+        return f'notify/{self.send_to}'
+
+    def encode(self) -> Dict[str, Any]:
         self: ReminderRecord
         return {
             "type": self.TypeName,
             "message": self.message,
-            "send_at": self.send_at.astimezone(timezone.utc),
+            "send_at": self.send_at.astimezone().astimezone(timezone.utc),
             "send_to": self.send_to,
             "is_sent": self.is_sent,
             "modified_on": datetime.utcnow(),
@@ -48,7 +57,7 @@ class ReminderRecord:
         return cls(
             _id=doc.get("_id", None),
             message=doc.get("message", ""),
-            send_at=doc["send_at"].astimezone(timezone.utc).astimezone(),
+            send_at=doc["send_at"].replace(tzinfo=timezone.utc).astimezone(),
             send_to=doc.get("send_to", HOME_TELEGRAM),
             is_sent=doc["is_sent"],
             modified_on=doc["modified_on"])
@@ -72,24 +81,45 @@ class ReminderService(hass.Hass):
         unsent_reminders = self.collection.find({'is_sent': False})
         for doc in unsent_reminders:
             record = ReminderRecord.decode(doc)
-            self.log(f'Found unsent reminder that was scheduled for {record.send_at}')
-            if record.send_at < self.now():
-                record.send_at = self.now() + timedelta(seconds=1)
-                record.message += f' (Originally scheduled to be sent at {record.send_at})'
-            self.schedule_reminder(record.send_at, record.id_)
+            send_at = record.send_at
+            self.log(f'Found unsent reminder that was scheduled for {send_at}')
+            if send_at < self.now():
+                rounded_dt = record.send_at.replace(microsecond=0)
+                record.message += f' (Originally scheduled to be sent at {rounded_dt})'
+                send_at = self.now() + timedelta(seconds=1)
+            self.schedule_reminder(send_at, record.id_)
 
     def set_reminder(self, event_name, data, kwargs):
+        """
+        :param data: requires 'at' or 'in' key, with as value a dictionary of the keyword arguments to:
+        date, time or datetime if the key is 'at'
+        timedelta if the key is 'in'
+        if both are given, 'in' takes precedence
+        optional keys are: 'message', self-explanatory; 'send_to', the name of the notify service to use.
+        """
         self.log(f'Received event of type {event_name}')
         record = self.get_reminder_record(data)
         if record.send_at < self.now():
             record.send_at += timedelta(days=1)
         storage_id = self.collection.insert(record.encode())
         self.schedule_reminder(record.send_at, storage_id)
+        self.log(f'Scheduled reminder at {record.send_at}')
+        self.notify_of_set_reminder(record)
+        self.log(f'Notified of reminder at {record.notify_service}')
 
     def schedule_reminder(self, send_at, storage_id):
         self.run_at(self.send_reminder,
                     start=send_at.astimezone(),
                     storage_id=storage_id)
+
+    def notify_of_set_reminder(self, record: ReminderRecord):
+        time_to_reminder: timedelta = record.send_at.replace(microsecond=0) \
+                                      - self.now().replace(microsecond=0)
+        self.call_service(
+            record.notify_service,
+            message=f'Reminding you with: '
+                    f'"{record.message}" in '
+                    f'{str(time_to_reminder).split(".")[0]}')
 
     def get_reminder_record(self, data: dict) -> ReminderRecord:
         send_at = self.get_reminder_time(data)
@@ -109,17 +139,17 @@ class ReminderService(hass.Hass):
             send_at_local = datetime.combine(
                 self.try_get_date(at_when),
                 self.try_get_time(at_when)
-            ).astimezone()
-            return send_at_local.astimezone(timezone.utc)
+            )
+            return send_at_local.astimezone()
         raise ValueError("Data of ad_reminder_set event must contain 'in' or 'at' info")
 
-    def try_get_date(self, data: dict) -> date:
+    def try_get_date(self, data: Dict[str, int]) -> date:
         try:
             return date(**data)
         except TypeError:
             return self.today()
 
-    def try_get_time(self, data: dict) -> time:
+    def try_get_time(self, data: Dict[str, float]) -> time:
         try:
             return time(**data)
         except TypeError:
@@ -129,12 +159,12 @@ class ReminderService(hass.Hass):
         this_reminder_by_id = {"_id": kwargs["storage_id"]}
         record = ReminderRecord.decode(
             self.collection.find_one(this_reminder_by_id))
-        self.call_service(f'notify/{record.send_to}', message=record.message)
+        self.call_service(record.notify_service, message=record.message)
         self.collection.update_one(
             this_reminder_by_id,
             {'$set': {
                 'is_sent': True,
-                'modified_on': self.now().astimezone(timezone.utc)
+                'modified_on': self.now().astimezone(timezone.utc)  # The DB needs UTC
             }})
 
     def read_all_reminders(self, event_name, data, kwargs):
@@ -143,6 +173,7 @@ class ReminderService(hass.Hass):
         self.log(str(list(docs)))
 
     def now(self) -> datetime:
+        """ Returns the local datetime, aware with the current timezone """
         return self.datetime(aware=True)
 
     def today(self) -> date:

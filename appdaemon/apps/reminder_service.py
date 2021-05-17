@@ -113,13 +113,13 @@ class ReminderService(hass.Hass):
                     storage_id=storage_id)
 
     def notify_of_set_reminder(self, record: ReminderRecord):
-        time_to_reminder: timedelta = record.send_at.replace(microsecond=0) \
-                                      - self.now().replace(microsecond=0)
+        time_to_reminder: timedelta = record.send_at - self.now()
         self.call_service(
             record.notify_service,
-            message=f'Reminding you with: '
-                    f'"{record.message}" in '
-                    f'{str(time_to_reminder).split(".")[0]}')
+            message=f'Over ' +
+                    self._format_as_hours_minutes(time_to_reminder) +
+                    ' stuur ik: '
+                    f'"{record.message}"')
 
     def get_reminder_record(self, data: dict) -> ReminderRecord:
         send_at = self.get_reminder_time(data)
@@ -171,6 +171,11 @@ class ReminderService(hass.Hass):
         self.log(f'Received event of type {event_name}')
         docs = self.collection.find()
         self.log(str(list(docs)))
+
+    @staticmethod
+    def _format_as_hours_minutes(td: timedelta) -> str:
+        """ Formats timedelta like 12h30, 1h00 """
+        return "h".join(str(td).split(":")[:-1])
 
     def now(self) -> datetime:
         """ Returns the local datetime, aware with the current timezone """

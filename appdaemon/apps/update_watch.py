@@ -12,11 +12,11 @@ MY_SUPERVISOR_LINK = 'https://my.home-assistant.io/redirect/supervisor'
 class UpdateWatcher(hass.Hass):
     def initialize(self):
         self.listen_state(self.on_new_ha_version,
-                          entity='sensor.latest_ha_version')
+                          'sensor.latest_ha_version')
         for system in SYSTEMS_TO_WATCH:
             self.listen_state(
                 self.on_update_available,
-                entity=f'binary_sensor.{system}_update_available',
+                f'binary_sensor.{system}_update_available',
                 new='on',
             )
 

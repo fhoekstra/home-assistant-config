@@ -8,3 +8,6 @@ update_watch:
 reminder_service:
   module: reminder_service
   class: ReminderService
+autocolor_execution:
+  module: autocolor_execution
+  class: AutoColorController

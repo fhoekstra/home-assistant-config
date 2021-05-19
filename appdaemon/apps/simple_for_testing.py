@@ -12,4 +12,4 @@ class SimpleForTesting(hass.Hass):
                 .total_seconds())
 
     def do_thing(self, kwargs):
-        self.turn_on('this_id')
+        self.turn_off('this_id')

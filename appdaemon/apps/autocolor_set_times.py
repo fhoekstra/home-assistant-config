@@ -74,7 +74,7 @@ class ColorChangeTimer(hass.Hass):
 
         desired_time_in_utc: timedelta = \
             self.evening_average \
-            + self.evening_amplitude * cos(2 * pi * time_since_solstice / timedelta(days=365))
+            - self.evening_amplitude * cos(2 * pi * time_since_solstice / timedelta(days=365.25))
 
         evening_time_utc = self.to_midnight_utc(now) + desired_time_in_utc
         evening_time_local = evening_time_utc.astimezone(now.tzinfo)
@@ -95,7 +95,7 @@ class ColorChangeTimer(hass.Hass):
 
         hour = timedelta(hours=1)
         offset = (1.25*hour
-                  + 0.75*hour * cos(
+                  - 0.75*hour * cos(
                     2*pi * time_since_solstice / timedelta(days=365)))
         return self.evening_time + offset
 

@@ -11,10 +11,52 @@ DEFAULT_TIME_FOR_REMINDER = time(hour=9, minute=0)
 HOME_TELEGRAM = 'teledobbygroup'
 
 
+class NotifyTarget:
+    def __init__(self, service_name: str):
+        self.service_name = service_name
+        self.service = f'notify/{service_name}'
+        self.kwargs = {}
+
+    def dict(self):
+        return {'notify': self.service_name}
+
+
+class TelegramTarget:
+    def __init__(self, chat_id: str):
+        self.chat_id = chat_id
+        self.service = 'telegram_bot/send_message'
+        self.kwargs = {'target': self.chat_id}
+
+    def dict(self):
+        return {'chat_id': self.chat_id}
+
+
+class SendTarget:
+    def __init__(self, send_to_dict: dict):
+        if 'notify' in send_to_dict:
+            self.target = NotifyTarget(send_to_dict['notify'])
+            return
+        if 'chat_id' in send_to_dict:
+            self.target = TelegramTarget(send_to_dict['chat_id'])
+            return
+        self.target = NotifyTarget(HOME_TELEGRAM)
+
+    @property
+    def service(self):
+        return self.target.service
+
+    @property
+    def kwargs(self):
+        return self.target.kwargs
+
+    def dict(self):
+        return self.target.dict()
+
+
 class ReminderRecord:
     TypeName = "ReminderRecord"
 
-    def __init__(self, message: str, send_at: datetime, send_to: str,
+    def __init__(self, message: str, send_at: datetime, send_to: SendTarget,
                  is_sent: bool, modified_on: datetime, _id=None):
         """
         send_at must be specified in local time. Translation to and from UTC for the database is handled by the
@@ -29,7 +71,7 @@ class ReminderRecord:
 
     @classmethod
     def new(cls, message: str, send_at: datetime,
-            send_to: str = HOME_TELEGRAM):
+            send_to: SendTarget = HOME_TELEGRAM):
         return cls(message=message,
                    send_at=send_at,
                    send_to=send_to,
@@ -38,7 +80,11 @@ class ReminderRecord:
 
     @property
     def notify_service(self) -> str:
-        return f'notify/{self.send_to}'
+        return self.send_to.service
+
+    @property
+    def notify_kwargs(self) -> dict:
+        return self.send_to.kwargs
 
     def encode(self) -> Dict[str, Any]:
         self: ReminderRecord
@@ -46,7 +92,7 @@ class ReminderRecord:
             "type": self.TypeName,
             "message": self.message,
             "send_at": self.send_at.astimezone().astimezone(timezone.utc),
-            "send_to": self.send_to,
+            "send_to": self.send_to.dict(),
             "is_sent": self.is_sent,
             "modified_on": datetime.utcnow(),
         }
@@ -58,7 +104,7 @@ class ReminderRecord:
             _id=doc.get("_id", None),
             message=doc.get("message", ""),
             send_at=doc["send_at"].replace(tzinfo=timezone.utc).astimezone(),
-            send_to=doc.get("send_to", HOME_TELEGRAM),
+            send_to=SendTarget(doc.get("send_to", {})),
             is_sent=doc["is_sent"],
             modified_on=doc["modified_on"])
 
@@ -98,7 +144,11 @@ class ReminderService(hass.Hass):
         date, time or datetime if the key is 'at'
         timedelta if the key is 'in'
         if both are given, 'in' takes precedence
-        optional keys are: 'message', self-explanatory; 'send_to', the name of the notify service to use.
+        optional keys are:
+        message: str    self-explanatory
+        send_to: dict   if given, should contain either a 'notify' or 'chat_id' key, with a str value for either
+            the notify service name or the telegram chat_id to send the message to
+            if not given, it will be sent to the default target
         """
         self.log(f'Received event of type {event_name}')
         record = self._get_reminder_record(data)
@@ -129,7 +179,7 @@ class ReminderService(hass.Hass):
             message=data.get("message",
                              f"This is a reminder, scheduled at {self.now()}"),
             send_at=send_at,
-            send_to=data.get("send_to", HOME_TELEGRAM))
+            send_to=SendTarget(data.get("send_to", {})))
 
     def _get_reminder_time(self, data) -> datetime:
         in_when = data.get("in", None)
@@ -162,7 +212,10 @@ class ReminderService(hass.Hass):
         this_reminder_by_id = {"_id": kwargs["storage_id"]}
         record = ReminderRecord.decode(
             self.collection.find_one(this_reminder_by_id))
-        self.call_service(record.notify_service, message=record.message)
+        self.call_service(
+            record.notify_service,
+            message=record.message,
+            **record.notify_kwargs)
         self.collection.update_one(
             this_reminder_by_id,
             {'$set': {

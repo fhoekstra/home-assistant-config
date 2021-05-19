@@ -80,14 +80,17 @@ class ReminderService(hass.Hass):
     def load_state(self):
         unsent_reminders = self.collection.find({'is_sent': False})
         for doc in unsent_reminders:
-            record = ReminderRecord.decode(doc)
-            send_at = record.send_at
-            self.log(f'Found unsent reminder that was scheduled for {send_at}')
-            if send_at < self.now():
-                rounded_dt = record.send_at.replace(microsecond=0)
-                record.message += f' (Originally scheduled to be sent at {rounded_dt})'
-                send_at = self.now() + timedelta(seconds=1)
-            self.schedule_reminder(send_at, record.id_)
+            self._schedule_unsent_reminder(doc)
+
+    def _schedule_unsent_reminder(self, doc):
+        record = ReminderRecord.decode(doc)
+        send_at = record.send_at
+        self.log(f'Found unsent reminder that was scheduled for {send_at}')
+        if send_at < self.now():
+            rounded_dt = record.send_at.replace(microsecond=0)
+            record.message += f' (Originally scheduled to be sent at {rounded_dt})'
+            send_at = self.now() + timedelta(seconds=1)
+        self._schedule_reminder(send_at, record.id_)
 
     def set_reminder(self, event_name, data, kwargs):
         """
@@ -98,21 +101,20 @@ class ReminderService(hass.Hass):
         optional keys are: 'message', self-explanatory; 'send_to', the name of the notify service to use.
         """
         self.log(f'Received event of type {event_name}')
-        record = self.get_reminder_record(data)
+        record = self._get_reminder_record(data)
         if record.send_at < self.now():
             record.send_at += timedelta(days=1)
         storage_id = self.collection.insert(record.encode())
-        self.schedule_reminder(record.send_at, storage_id)
+        self._schedule_reminder(record.send_at, storage_id)
         self.log(f'Scheduled reminder at {record.send_at}')
-        self.notify_of_set_reminder(record)
-        self.log(f'Notified of reminder at {record.notify_service}')
+        self._notify_of_set_reminder(record)
 
-    def schedule_reminder(self, send_at, storage_id):
+    def _schedule_reminder(self, send_at, storage_id):
         self.run_at(self.send_reminder,
                     start=send_at.astimezone(),
                     storage_id=storage_id)
 
-    def notify_of_set_reminder(self, record: ReminderRecord):
+    def _notify_of_set_reminder(self, record: ReminderRecord):
         time_to_reminder: timedelta = record.send_at - self.now()
         self.call_service(
             record.notify_service,
@@ -121,15 +123,15 @@ class ReminderService(hass.Hass):
                     ' stuur ik: '
                     f'"{record.message}"')
 
-    def get_reminder_record(self, data: dict) -> ReminderRecord:
-        send_at = self.get_reminder_time(data)
+    def _get_reminder_record(self, data: dict) -> ReminderRecord:
+        send_at = self._get_reminder_time(data)
         return ReminderRecord.new(
             message=data.get("message",
                              f"This is a reminder, scheduled at {self.now()}"),
             send_at=send_at,
             send_to=data.get("send_to", HOME_TELEGRAM))
 
-    def get_reminder_time(self, data) -> datetime:
+    def _get_reminder_time(self, data) -> datetime:
         in_when = data.get("in", None)
         if in_when is not None:
             period = timedelta(**in_when)
@@ -137,19 +139,20 @@ class ReminderService(hass.Hass):
         at_when = data.get("at", None)
         if at_when is not None:
             send_at_local = datetime.combine(
-                self.try_get_date(at_when),
-                self.try_get_time(at_when)
+                self._try_get_date(at_when),
+                self._try_get_time(at_when)
             )
             return send_at_local.astimezone()
         raise ValueError("Data of ad_reminder_set event must contain 'in' or 'at' info")
 
-    def try_get_date(self, data: Dict[str, int]) -> date:
+    def _try_get_date(self, data: Dict[str, int]) -> date:
         try:
             return date(**data)
         except TypeError:
             return self.today()
 
-    def try_get_time(self, data: Dict[str, float]) -> time:
+    @staticmethod
+    def _try_get_time(data: Dict[str, float]) -> time:
         try:
             return time(**data)
         except TypeError:
@@ -174,8 +177,10 @@ class ReminderService(hass.Hass):
 
     @staticmethod
     def _format_as_hours_minutes(td: timedelta) -> str:
-        """ Formats timedelta like 12h30, 1h00 """
-        return "h".join(str(td).split(":")[:-1])
+        """ Formats timedelta like 12u30, 1u00 (NL localized)"""
+        return "u".join(
+            str(td + timedelta(seconds=1)
+            ).split(":")[:-1])
 
     def now(self) -> datetime:
         """ Returns the local datetime, aware with the current timezone """

@@ -1,12 +1,14 @@
 from datetime import datetime, date, timedelta, timezone
 from datetime import time
 from math import cos, pi
-from typing import Callable, Any, Iterable
+from typing import Callable, Iterable
 
 import appdaemon.plugins.hass.hassapi as hass
 
-MIN_EVENING_TIME_UTC = time(hour=18)
-MAX_EVENING_TIME_UTC = time(hour=22)
+MIN_EVENING_TIME_UTC = time(hour=17)  # local_time is this + 1
+MAX_EVENING_TIME_UTC = time(hour=20, minute=30)  # local_time is this + 2
+MIDSUMMER_DURATION = timedelta(minutes=15)
+MIDWINTER_DURATION = timedelta(hours=3, minutes=30)
 
 NIGHT_START_TIME = 'input_datetime.night_start_time'
 EVE_START_TIME = 'input_datetime.early_eve_start_time'
@@ -53,9 +55,9 @@ class ColorChangeTimer(hass.Hass):
         return switch_state == 'on'
 
     def set_evening_time(self) -> datetime:
-        now: datetime = self.datetime(aware=True)
+        now: datetime = self.datetime()
         self.evening_time = self.get_evening_time(now)
-        formatted_time = self.evening_time.strftime('%H:%M:00')
+        formatted_time = self._format_in_hours_minutes(self.evening_time)
         self.call_service(
             'input_datetime/set_datetime',
             entity_id=EVE_START_TIME,
@@ -65,8 +67,7 @@ class ColorChangeTimer(hass.Hass):
 
     def get_evening_time(self, now: datetime) -> datetime:
         """
-        now as datetime in the local timezone, and aware, i.e. have the local
-            timezone as tzinfo attribute
+        now as datetime in the local timezone
         min_time_utc and max_time_utc time at which to change color on shortest
             and longest day, in utc
         """
@@ -74,15 +75,16 @@ class ColorChangeTimer(hass.Hass):
 
         desired_time_in_utc: timedelta = \
             self.evening_average \
-            - self.evening_amplitude * cos(2 * pi * time_since_solstice / timedelta(days=365.25))
+            - self.evening_amplitude * cos(2 * pi
+                                           * time_since_solstice / timedelta(days=365))
 
         evening_time_utc = self.to_midnight_utc(now) + desired_time_in_utc
-        evening_time_local = evening_time_utc.astimezone(now.tzinfo)
+        evening_time_local = evening_time_utc.astimezone()
         return evening_time_local
 
     def set_night_time(self, evening_time: datetime):
         self.night_time = self.get_night_time(evening_time)
-        formatted_time = self.night_time.strftime('%H:%M:00')
+        formatted_time = self._format_in_hours_minutes(self.night_time)
         self.call_service(
             'input_datetime/set_datetime',
             entity_id=NIGHT_START_TIME,
@@ -94,18 +96,33 @@ class ColorChangeTimer(hass.Hass):
         time_since_solstice: timedelta = today - self.get_shortest_day_in(today.year)
 
         hour = timedelta(hours=1)
-        offset = (1.25*hour
-                  - 0.75*hour * cos(
-                    2*pi * time_since_solstice / timedelta(days=365)))
-        return self.evening_time + offset
+        offset = (
+            self.duration_average
+            + self.duration_amplitude * cos(2*pi
+                                            * time_since_solstice / timedelta(days=365)))
+        self.duration = offset
+        return evening_time + self.duration
 
     @property
     def evening_amplitude(self) -> timedelta:
-        return (self.max_evening_time_utc - self.min_evening_time_utc) / 2
+        return abs(self.max_evening_time_utc - self.min_evening_time_utc) / 2
 
     @property
     def evening_average(self) -> timedelta:
         return (self.max_evening_time_utc + self.min_evening_time_utc) / 2
+
+    @property
+    def duration_amplitude(self) -> timedelta:
+        return abs(MIDWINTER_DURATION - MIDSUMMER_DURATION) / 2
+
+    @property
+    def duration_average(self) -> timedelta:
+        return (MIDWINTER_DURATION + MIDSUMMER_DURATION) / 2
+
+    @staticmethod
+    def _format_in_hours_minutes(dt: datetime) -> str:
+        """ Add half a minute for rounding """
+        return (dt + timedelta(minutes=0.5)).strftime('%H:%M:00')
 
     @staticmethod
     def to_midnight_utc(now: datetime) -> datetime:

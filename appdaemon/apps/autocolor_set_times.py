@@ -6,7 +6,7 @@ from typing import Callable, Iterable
 import appdaemon.plugins.hass.hassapi as hass
 
 MIN_EVENING_TIME_UTC = time(hour=17)  # local_time is this + 1
-MAX_EVENING_TIME_UTC = time(hour=20, minute=30)  # local_time is this + 2
+MAX_EVENING_TIME_UTC = time(hour=20, minute=0)  # local_time is this + 2
 MIDSUMMER_DURATION = timedelta(minutes=15)
 MIDWINTER_DURATION = timedelta(hours=3, minutes=30)
 

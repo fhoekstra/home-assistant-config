@@ -11,7 +11,7 @@ SUMMER_TIME_LOCAL_UTC_OFFSET = timedelta(hours=2)
 
 
 @automation_fixture(ColorChangeTimer)
-def color_change_timer(given_that):
+def color_change_timer():
     pass
 
 

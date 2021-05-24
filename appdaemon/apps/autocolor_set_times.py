@@ -51,7 +51,6 @@ class ColorChangeTimer(hass.Hass):
         switch_state = self.get_state(
             entity_id=ON_OFF_SWITCH,
             attribute='state')
-        self.log(f'{switch_state=}')
         return switch_state == 'on'
 
     def set_evening_time(self) -> datetime:

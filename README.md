@@ -56,6 +56,27 @@ I use the following components to implement this
   * **VS Code** in front-end in browser
   * **Samba share** for easy access to the machine file from Windows pc
 
+## Node-Red demo
+
+Node-Red is a simple yet powerful flow-based automation framework, but sharing what you're doing with it on Github can be difficult, because the json format is not human-readable.
+
+So I decided to take some screenshots of my flows, and show a bit of code.
+
+### Main buttons flow in Node-Red
+
+I do 3 things with buttons: "normal" buttons that control lights, a button to set reminders next to the washing machine, and bedroom-specific things like turning off all lights in the evening, or interrupting the wake-up lights sequence in the morning.
+
+![Main buttons flow](https://raw.githubusercontent.com/fhoekstra/home-assistant-config/master/node-red-pictures-and-examples/Normal-light-buttons-flow.png)
+
+Especially interesting to share in this, is [the first node on the left](https://github.com/fhoekstra/home-assistant-config/blob/master/node-red-pictures-and-examples/translate-tradfri-remote-code.js). It contains the code I have pasted [here](https://github.com/fhoekstra/home-assistant-config/blob/master/node-red-pictures-and-examples/translate-tradfri-remote-code.js) and decouples the specific codes of the buttons from the logic of my automations.
+
+### Wake-up lights flow in Node-Red
+
+This flow toggles and monitors an `input_boolean` in HA to indicate whether the wake-up lights sequence is, and should be, in progress.
+The total duration is set in another input in HA, and divided by the number of transitions of :zap: bulbs to set the transition per bulb. At the end, a switch is used to turn on a very bright white light.
+![Wake-up lights](https://raw.githubusercontent.com/fhoekstra/home-assistant-config/master/node-red-pictures-and-examples/wake-up-lights-flow.png)
+
+
 ## Resources
 
 To get started with Home Assistant, and for the documentation, visit: https://www.home-assistant.io/getting-started/

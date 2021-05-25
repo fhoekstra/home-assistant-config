@@ -85,8 +85,6 @@ input_number:
 #lovelace: # uncomment to make UI editable in YAML files for custom cards
 #  mode: yaml
 
-python_script: # python scripts folder
-
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_token

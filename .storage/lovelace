@@ -158,6 +158,12 @@
                                 },
                                 {
                                     "entity": "input_boolean.automatic_color_time_adjustment"
+                                },
+                                {
+                                    "entity": "input_number.desired_color_temperature"
+                                },
+                                {
+                                    "entity": "input_boolean.automatic_color_temp_adjustment"
                                 }
                             ],
                             "title": "Kleurverandering lampen",

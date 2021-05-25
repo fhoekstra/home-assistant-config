@@ -17,16 +17,17 @@ class UpdateWatcher(hass.Hass):
             self.listen_state(
                 self.on_update_available,
                 f'binary_sensor.{system}_update_available',
-                new='on',
             )
 
     def on_update_available(self, entity, attribute, old, new, kwargs):
+        if new == 'off' or attribute != 'state':
+            return
         system = entity[len('binary_sensor.')
                         :-len('_update_available')]
         new_version = self.get_state(f'sensor.{system}_newest_version')
         current_version = self.get_state(f'sensor.{system}_version')
         self.call_service(
-            'notify.mobile_app_fp3',
+            'notify/mobile_app_fp3',
             message=f'Update available for {system}.'
                     f' Upgrade from {current_version}'
                     f' to {new_version} in {MY_SUPERVISOR_LINK}'
@@ -34,7 +35,7 @@ class UpdateWatcher(hass.Hass):
 
     def on_new_ha_version(self, entity, attribute, old, new, kwargs):
         self.call_service(
-            'notify.mobile_app_fp3',
+            'notify/mobile_app_fp3',
             message=f'Update available for HA Core.'
                     f' Upgrade to {new} in {MY_SUPERVISOR_LINK}'
         )

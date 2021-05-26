@@ -32,10 +32,6 @@ input_boolean:
     name: "Weekend"
     initial: on
     icon: mdi:calendar-blank
-  auto_color_enabled:
-    name: "Kleurverloop"
-    initial: on
-    icon: mdi:palette
   vacation:
     name: "Vakantie"
     icon: mdi:tent

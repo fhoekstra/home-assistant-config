@@ -20,7 +20,10 @@ AUTO_COLOR_SWITCH = 'input_boolean.auto_color_enabled'
 class AutoColorController(hass.Hass):
     def initialize(self):
         # set color entity
-        self.run_minutely(self.set_desired_color, self.datetime())
+        self.run_every(
+            callback=self.set_desired_color,
+            start=self.datetime() + timedelta(seconds=1),
+            interval=timedelta(seconds=5).total_seconds())
         self.listen_state(self.on_input_change, AUTO_SET_TEMP_SWITCH)
         self.listen_state(self.on_input_change, AUTO_COLOR_SWITCH)
         self.listen_state(self.on_input_change, DESIRED_COLOR_ENTITY)
@@ -35,10 +38,10 @@ class AutoColorController(hass.Hass):
                                            self.get_state(DESIRED_COLOR_ENTITY), kwargs)
 
     def change_color_of_on_lights(self, entity, attribute, old, new, kwargs):
-        if not self._state_is_on(AUTO_COLOR_SWITCH):
+        if not self._is_state_on(AUTO_COLOR_SWITCH):
             return
         for light in LIGHTS_TO_CHANGE:
-            if not self._state_is_on(light):
+            if not self._is_state_on(light):
                 continue
             self.call_service('light/turn_on',
                               entity_id=light,
@@ -47,7 +50,7 @@ class AutoColorController(hass.Hass):
     def on_light_turn_on(self, entity, attribute, old, new, kwargs):
         if entity not in LIGHTS_TO_CHANGE:
             return
-        if not self._state_is_on(AUTO_COLOR_SWITCH):
+        if not self._is_state_on(AUTO_COLOR_SWITCH):
             return
         if not (attribute == 'state' and new == 'on'):
             return
@@ -66,7 +69,7 @@ class AutoColorController(hass.Hass):
         self.set_desired_color(kwargs)
 
     def set_desired_color(self, kwargs):
-        if not self._state_is_on(AUTO_SET_TEMP_SWITCH):
+        if not self._is_state_on(AUTO_SET_TEMP_SWITCH):
             self.log('Automatic color temp adjustment is not turned on')
             return
         current_time = self._get_current_time()
@@ -106,11 +109,11 @@ class AutoColorController(hass.Hass):
     def _get_time_state(self, entity: str) -> time:
         return time.fromisoformat(self.get_state(entity))
 
-    def _state_is_on(self, entity: str) -> bool:
+    def _is_state_on(self, entity: str) -> bool:
         return self.get_state(entity, attribute='state') == 'on'
 
     def _get_current_time(self):
-        current_time = self.datetime().time().replace(second=0, microsecond=0)
+        current_time = self.datetime().time()
         return current_time
 
     @staticmethod

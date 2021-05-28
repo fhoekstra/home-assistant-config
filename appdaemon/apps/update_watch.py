@@ -27,7 +27,7 @@ class UpdateWatcher(hass.Hass):
         new_version = self.get_state(f'sensor.{system}_newest_version')
         current_version = self.get_state(f'sensor.{system}_version')
         self.call_service(
-            'notify/mobile_app_fp3',
+            'notify/teledobbyme',
             message=f'Update available for {system}.'
                     f' Upgrade from {current_version}'
                     f' to {new_version} in {MY_SUPERVISOR_LINK}'
@@ -35,7 +35,7 @@ class UpdateWatcher(hass.Hass):
 
     def on_new_ha_version(self, entity, attribute, old, new, kwargs):
         self.call_service(
-            'notify/mobile_app_fp3',
+            'notify/teledobbyme',
             message=f'Update available for HA Core.'
                     f' Upgrade to {new} in {MY_SUPERVISOR_LINK}'
         )

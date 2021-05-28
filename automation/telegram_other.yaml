@@ -15,19 +15,6 @@
     - service: light.turn_off
       data:
         entity_id: all
-- alias: Update notification
-  initial_state: True
-  trigger:
-    - platform: state
-      entity_id: sensor.latest_ha_version
-  action:
-    - service: notify.teledobbyme
-      data_template:
-        title: "New Home Assistant Release"
-        message: |
-          Home Assistant {{ states.sensor.latest_ha_version.state }} is nu beschikbaar.
-
-          https://www.home-assistant.io/blog/categories/release-notes/
 - id: "1666175229111"
   alias: Dankjewel Dobby
   trigger:

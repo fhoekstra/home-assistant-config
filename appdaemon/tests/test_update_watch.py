@@ -33,8 +33,7 @@ def test_update_message_sent_for_add_on(given_that, update_watcher, assert_that)
 
     update_watcher.on_update_available('binary_sensor.node_red_update_available', 'state', 'off', 'on', {})
 
-    a = assert_that('notify/mobile_app_fp3')
-    assert_that('notify/mobile_app_fp3').was.called_with(
+    assert_that('notify/teledobbyme').was.called_with(
         message='Update available for node_red.'
                 ' Upgrade from 1.0'
                 f' to 2.0 in {MY_SUPERVISOR_LINK}'

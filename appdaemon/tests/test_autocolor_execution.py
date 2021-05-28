@@ -67,7 +67,7 @@ def test_on_light_turn_on_does_change_color_when_light_is_wrong_color(given_that
 
 
 # noinspection PyShadowingNames
-def test_set_color_changes_color_when_it_is_time(given_that, color_controller, assert_that):
+def test_set_color_interpolates_during_evening(given_that, color_controller, assert_that):
     expected_end_color = (MIN_COLOR_TEMP + MAX_COLOR_TEMP) / 2.
     eve_start = time(hour=18)
     test_time = time(hour=19)

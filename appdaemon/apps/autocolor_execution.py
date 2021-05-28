@@ -1,5 +1,5 @@
-from datetime import time, timedelta
-from typing import Tuple
+from datetime import time, timedelta, datetime, date
+from typing import Tuple, Iterable
 
 import appdaemon.plugins.hass.hassapi as hass
 
@@ -80,18 +80,18 @@ class AutoColorController(hass.Hass):
             value=color)
 
     def get_desired_color(self, current_time: time) -> float:
-        morning_start, evening_start, night_start = (
-            self._get_time_state(entity)
-            for entity in (
-                MORNING_START_TIME, EVE_START_TIME, NIGHT_START_TIME)
-        )
-        if current_time < morning_start:
+        morning_start, evening_start, night_start = self.get_morning_evening_night_times()
+        if current_time < self.subtract(morning_start, timedelta(minutes=30)):
             return MAX_COLOR_TEMP
         if current_time <= evening_start:
             return MIN_COLOR_TEMP
         if current_time < night_start:
             return self._get_interpolated_color(current_time, (evening_start, night_start))
         return MAX_COLOR_TEMP
+
+    def get_morning_evening_night_times(self) -> Iterable[time]:
+        for entity in (MORNING_START_TIME, EVE_START_TIME, NIGHT_START_TIME):
+            yield time.fromisoformat(self.get_state(entity))
 
     def _get_interpolated_color(self, current_time: time, limits: Tuple[time, time]) -> float:
         start, end = (self._to_timedelta(t) for t in limits)
@@ -106,15 +106,16 @@ class AutoColorController(hass.Hass):
     def mired_difference() -> float:
         return MAX_COLOR_TEMP - MIN_COLOR_TEMP
 
-    def _get_time_state(self, entity: str) -> time:
-        return time.fromisoformat(self.get_state(entity))
-
     def _is_state_on(self, entity: str) -> bool:
         return self.get_state(entity, attribute='state') == 'on'
 
-    def _get_current_time(self):
+    def _get_current_time(self) -> time:
         current_time = self.datetime().time()
         return current_time
+
+    @staticmethod
+    def subtract(t: time, d: timedelta) -> time:
+        return (datetime.combine(date.today(), t) - d).time()
 
     @staticmethod
     def _to_timedelta(t: time) -> timedelta:

@@ -4,7 +4,7 @@ from typing import Dict, Any
 import appdaemon.plugins.hass.hassapi as hass
 from pymongo import MongoClient
 
-MONGO_HOST = '172.30.33.4'
+MONGO_HOST = 'mongo'
 MONGO_PORT = 27017
 
 DEFAULT_TIME_FOR_REMINDER = time(hour=9, minute=0)

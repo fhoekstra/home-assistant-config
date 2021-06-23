@@ -81,7 +81,7 @@ class AutoColorController(hass.Hass):
 
     def get_desired_color(self, current_time: time) -> float:
         morning_start, evening_start, night_start = self.get_morning_evening_night_times()
-        if current_time < self.subtract(morning_start, timedelta(minutes=30)):
+        if current_time < time(hour=7, minute=0):
             return MAX_COLOR_TEMP
         if current_time <= evening_start:
             return MIN_COLOR_TEMP

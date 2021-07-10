@@ -1,6 +1,9 @@
 from appdaemontestframework import automation_fixture
 
-from apps.update_watch import UpdateWatcher, MY_SUPERVISOR_LINK
+from apps.update_watch import UpdateWatcher, MY_SUPERVISOR_LINK, NOTIFY_ME
+
+OLD_VERSION = '1.0'
+NEW_VERSION = '2.0'
 
 
 @automation_fixture(UpdateWatcher)
@@ -28,13 +31,11 @@ def test_update_of_ha_core_is_watched(given_that, update_watcher, assert_that):
 
 
 def test_update_message_sent_for_add_on(given_that, update_watcher, assert_that):
-    given_that.state_of('sensor.node_red_version').is_set_to('1.0')
-    given_that.state_of('sensor.node_red_newest_version').is_set_to('2.0')
+    given_that.state_of('sensor.node_red_version').is_set_to(OLD_VERSION)
+    given_that.state_of('sensor.node_red_newest_version').is_set_to(NEW_VERSION)
 
     update_watcher.on_update_available('binary_sensor.node_red_update_available', 'state', 'off', 'on', {})
 
-    assert_that('notify/teledobbyme').was.called_with(
-        message='Update available for node_red.'
-                ' Upgrade from 1.0'
-                f' to 2.0 in {MY_SUPERVISOR_LINK}'
+    assert_that(NOTIFY_ME).was.called_with(
+        message=f'Upgrade node_red in {MY_SUPERVISOR_LINK}'
     )

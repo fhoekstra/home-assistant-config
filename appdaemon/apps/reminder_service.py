@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from datetime import timedelta, datetime, timezone, time, date
 from typing import Dict, Any
 
@@ -11,46 +12,54 @@ DEFAULT_TIME_FOR_REMINDER = time(hour=9, minute=0)
 HOME_TELEGRAM = 'teledobbygroup'
 
 
-class NotifyTarget:
+class SendTarget(ABC):
+    @abstractmethod
+    def service(self) -> str:
+        pass
+
+    @abstractmethod
+    def kwargs(self) -> Dict:
+        pass
+
+    @abstractmethod
+    def dict(self) -> Dict:
+        pass
+
+
+class NotifyTarget(SendTarget):
     def __init__(self, service_name: str):
-        self.service_name = service_name
-        self.service = f'notify/{service_name}'
-        self.kwargs = {}
+        self._service_name = service_name
+
+    def service(self) -> str:
+        return f'notify/{self._service_name}'
+
+    def kwargs(self) -> Dict:
+        return {}
 
     def dict(self):
-        return {'notify': self.service_name}
+        return {'notify': self._service_name}
 
 
-class TelegramTarget:
+class TelegramTarget(SendTarget):
     def __init__(self, chat_id: str):
-        self.chat_id = chat_id
-        self.service = 'telegram_bot/send_message'
-        self.kwargs = {'target': self.chat_id}
+        self._chat_id = chat_id
+
+    def service(self) -> str:
+        return 'telegram_bot/send_message'
+
+    def kwargs(self) -> Dict:
+        return {'target': self._chat_id}
 
     def dict(self):
-        return {'chat_id': self.chat_id}
+        return {'chat_id': self._chat_id}
 
 
-class SendTarget:
-    def __init__(self, send_to_dict: dict):
-        if 'notify' in send_to_dict:
-            self.target = NotifyTarget(send_to_dict['notify'])
-            return
-        if 'chat_id' in send_to_dict:
-            self.target = TelegramTarget(send_to_dict['chat_id'])
-            return
-        self.target = NotifyTarget(HOME_TELEGRAM)
-
-    @property
-    def service(self):
-        return self.target.service
-
-    @property
-    def kwargs(self):
-        return self.target.kwargs
-
-    def dict(self):
-        return self.target.dict()
+def get_send_target(send_to_dict: dict):
+    if 'notify' in send_to_dict:
+        return NotifyTarget(send_to_dict['notify'])
+    if 'chat_id' in send_to_dict:
+        return TelegramTarget(send_to_dict['chat_id'])
+    return NotifyTarget(HOME_TELEGRAM)
 
 
 class ReminderRecord:
@@ -80,11 +89,11 @@ class ReminderRecord:
 
     @property
     def notify_service(self) -> str:
-        return self.send_to.service
+        return self.send_to.service()
 
     @property
     def notify_kwargs(self) -> dict:
-        return self.send_to.kwargs
+        return self.send_to.kwargs()
 
     def encode(self) -> Dict[str, Any]:
         self: ReminderRecord
@@ -104,7 +113,7 @@ class ReminderRecord:
             _id=doc.get("_id", None),
             message=doc.get("message", ""),
             send_at=doc["send_at"].replace(tzinfo=timezone.utc).astimezone(),
-            send_to=SendTarget(doc.get("send_to", {})),
+            send_to=get_send_target(doc.get("send_to", {})),
             is_sent=doc["is_sent"],
             modified_on=doc["modified_on"])
 
@@ -145,7 +154,7 @@ class ReminderService(hass.Hass):
         timedelta if the key is 'in'
         if both are given, 'in' takes precedence
         optional keys are:
-        message: str    self-explanatory
+        message: str    message to send at the indicated time
         send_to: dict   if given, should contain either a 'notify' or 'chat_id' key, with a str value for either
             the notify service name or the telegram chat_id to send the message to
             if not given, it will be sent to the default target
@@ -179,7 +188,7 @@ class ReminderService(hass.Hass):
             message=data.get("message",
                              f"This is a reminder, scheduled at {self.now()}"),
             send_at=send_at,
-            send_to=SendTarget(data.get("send_to", {})))
+            send_to=get_send_target(data.get("send_to", {})))
 
     def _get_reminder_time(self, data) -> datetime:
         in_when = data.get("in", None)

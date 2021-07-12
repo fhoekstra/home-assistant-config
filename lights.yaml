@@ -22,6 +22,11 @@
     - light.keuken_deurkant
     - light.keuken_koelkastkant
 - platform: group
+  name: slaapkamer
+  entities:
+    - light.nachtkastje
+    - light.slaapkamer_plafond
+- platform: group
   name: all_lights
   entities:
     - light.woonkamer

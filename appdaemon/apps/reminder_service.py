@@ -149,15 +149,18 @@ class ReminderService(hass.Hass):
 
     def set_reminder(self, event_name, data, kwargs):
         """
-        :param data: requires 'at' or 'in' key, with as value a dictionary of the keyword arguments to:
+        :param data: requires 'at' or 'in' key, with as value a dictionary of 
+        the keyword arguments to:
         date, time or datetime if the key is 'at'
         timedelta if the key is 'in'
         if both are given, 'in' takes precedence
         optional keys are:
         message: str    message to send at the indicated time
-        send_to: dict   if given, should contain either a 'notify' or 'chat_id' key, with a str value for either
-            the notify service name or the telegram chat_id to send the message to
-            if not given, it will be sent to the default target
+        send_to: dict   if given, should contain either a 'notify' or 'chat_id' 
+        key, with a str value for either
+            - the notify service name or the telegram chat_id to send the
+              message to
+            - if not given, it will be sent to the default target
         """
         self.log(f'Received event of type {event_name}')
         record = self._get_reminder_record(data)

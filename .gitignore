@@ -35,6 +35,8 @@ node-red/package.json
 .idea
 *.log
 *.db
+*.db-wal
+*db-shm
 __pycache__
 compiled
 

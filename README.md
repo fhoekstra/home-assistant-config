@@ -21,7 +21,8 @@ I use the following components to implement this
 
 ### Devices
 
-* 1 **Raspberry Pi 4B 4GB** with a 32GB high-quality microSD with Home Assistant OS
+* 1 **Raspberry Pi 4B 4GB** with Home Assistant OS
+* 1 WD Green 2.5" SATA SSD 120GB, connected with a Startech USB 3.0 to SATA 2.5" adapter
 * :zap: Phoscon **ConBee 2** Zigbee USB gateway
 * :zap: Zigbee devices:
   * 9 IKEA Trådfri lights (not RGB, but white to yellow)

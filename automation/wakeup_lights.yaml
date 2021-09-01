@@ -2,9 +2,12 @@
   id: '1565175229733'
   trigger:
   - platform: template
-    value_template: '{{ (((states.input_datetime.morning_start_time.attributes["timestamp"])
-      - (states.input_number.wakeup_time_transition.state | int * 60)) | timestamp_custom("%H:%M",
-      False) ) == ( states.sensor.time.state ) }} '
+    value_template: >-
+      {%- set transition_minutes = (states.input_number.wakeup_time_transition.state | int ) -%}
+      {%- set t = states.sensor.time -%}
+      {%- set in_x_minutes = now() + timedelta(minutes=transition_minutes) -%}
+      {%- set alarm_end_str = states.input_datetime.morning_start_time.state -%}
+      {{ in_x_minutes.strftime("%H:%M:00") == alarm_end_str }}
   condition:
   - condition: state
     entity_id: input_boolean.wakeup_enabled
@@ -36,5 +39,8 @@
   - service: input_datetime.set_datetime
     data_template:
       entity_id: input_datetime.morning_start_time
-      time: "{{ ((((states('input_number.morning_start_hour') | int  * 3600 )
-                  + (states('input_number.morning_start_minutes') | int * 60)) | int) |int|timestamp_custom('%H:%M',False)) }}"
+      time: >-
+        {%- set h_in_s = (states('input_number.morning_start_hour') | int * 3600) -%}
+        {%- set m_in_s = (states('input_number.morning_start_minutes') | int * 60) -%}
+        {%- set total_seconds = h_in_s + m_in_s -%}
+        {{ (total_seconds | timestamp_custom('%H:%M',False)) }}

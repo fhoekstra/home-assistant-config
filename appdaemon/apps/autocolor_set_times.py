@@ -23,6 +23,8 @@ SHORTEST_DAY_MONTH = 12
 class ColorChangeTimer(hass.Hass):
 
     def initialize(self):
+        self.set_log_level('WARNING')
+
         self.max_evening_time_utc = self.to_timedelta(MAX_EVENING_TIME_UTC)
         self.min_evening_time_utc = self.to_timedelta(MIN_EVENING_TIME_UTC)
 
@@ -30,7 +32,7 @@ class ColorChangeTimer(hass.Hass):
 
         self.run_every(
             callback=self.set_times,
-            start=self.datetime() + timedelta(minutes=1),
+            start=self.datetime() + timedelta(seconds=1),
             interval=timedelta(hours=2, minutes=7
                                ).total_seconds())
 
@@ -51,6 +53,10 @@ class ColorChangeTimer(hass.Hass):
         switch_state = self.get_state(
             entity_id=ON_OFF_SWITCH,
             attribute='state')
+        self.log(f'state attr of {ON_OFF_SWITCH}: {str(switch_state)}', level='DEBUG')
+        simple_state = self.get_state(
+            entity_id=ON_OFF_SWITCH)
+        self.log(f'simple state of {ON_OFF_SWITCH}: {str(simple_state)}', level='DEBUG')
         return switch_state == 'on'
 
     def set_evening_time(self) -> datetime:
@@ -61,7 +67,7 @@ class ColorChangeTimer(hass.Hass):
             'input_datetime/set_datetime',
             entity_id=EVE_START_TIME,
             time=formatted_time)
-        self.log(f'Set evening time to {formatted_time}')
+        self.log(f'Set evening time to {formatted_time}', level='INFO')
         return self.evening_time
 
     def get_evening_time(self, now: datetime) -> datetime:
@@ -88,7 +94,7 @@ class ColorChangeTimer(hass.Hass):
             'input_datetime/set_datetime',
             entity_id=NIGHT_START_TIME,
             time=formatted_time)
-        self.log(f'Set night time to {formatted_time}')
+        self.log(f'Set night time to {formatted_time}', level='INFO')
 
     def get_night_time(self, evening_time: datetime) -> datetime:
         today = evening_time.date()

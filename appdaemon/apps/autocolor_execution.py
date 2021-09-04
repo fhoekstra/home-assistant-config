@@ -19,11 +19,13 @@ AUTO_COLOR_SWITCH = 'input_boolean.auto_color_enabled'
 # noinspection PyAttributeOutsideInit
 class AutoColorController(hass.Hass):
     def initialize(self):
+        self.set_log_level('WARNING')
+
         # set color entity
         self.run_every(
             callback=self.set_desired_color,
             start=self.datetime() + timedelta(seconds=1),
-            interval=timedelta(seconds=5).total_seconds())
+            interval=timedelta(seconds=10).total_seconds())
         self.listen_state(self.on_input_change, AUTO_SET_TEMP_SWITCH)
         self.listen_state(self.on_input_change, AUTO_COLOR_SWITCH)
         self.listen_state(self.on_input_change, DESIRED_COLOR_ENTITY)
@@ -49,17 +51,20 @@ class AutoColorController(hass.Hass):
 
     def on_light_turn_on(self, entity, attribute, old, new, kwargs):
         if entity not in LIGHTS_TO_CHANGE:
+            self.log(f'not a light I should change: {entity}', level='DEBUG')
             return
         if not self._is_state_on(AUTO_COLOR_SWITCH):
+            self.log(f'not on: {entity}', level='DEBUG')
             return
         if not (attribute == 'state' and new == 'on'):
+            self.log(f'{attribute=} and {new=}', level='DEBUG')
             return
         desired_color_temp = float(self.get_state(DESIRED_COLOR_ENTITY))
         current_color_temp = float(self.get_state(entity, attribute='color_temp'))
         if current_color_temp == desired_color_temp:
-            self.log(f'{entity} is already {desired_color_temp=}')
+            self.log(f'{entity} is already {desired_color_temp=}', level='DEBUG')
             return
-        self.log(f'Changing {entity} to {desired_color_temp}')
+        self.log(f'Changing {entity} to {desired_color_temp}', level='INFO')
         self.call_service(
             'light/turn_on',
             entity_id=entity,
@@ -70,10 +75,13 @@ class AutoColorController(hass.Hass):
 
     def set_desired_color(self, kwargs):
         if not self._is_state_on(AUTO_SET_TEMP_SWITCH):
-            self.log('Automatic color temp adjustment is not turned on')
+            self.log('Automatic color temp adjustment is not turned on', level='WARNING')
             return
+        self.log('Getting current time', level='DEBUG')
         current_time = self._get_current_time()
+        self.log('calculating desired color', level='DEBUG')
         color = self.get_desired_color(current_time)
+        self.log('setting desired color', level='DEBUG')
         self.call_service(
             'input_number/set_value',
             entity_id=DESIRED_COLOR_ENTITY,
@@ -98,7 +106,7 @@ class AutoColorController(hass.Hass):
         current = self._to_timedelta(current_time)
 
         fraction_passed = (current - start) / (end - start)
-        self.log(f'{fraction_passed}')
+        self.log(f'{fraction_passed * 100}% of changing of lights color', level='DEBUG')
         mireds_to_add = fraction_passed * self.mired_difference()
         return MIN_COLOR_TEMP + mireds_to_add
 

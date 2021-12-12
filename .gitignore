@@ -1,5 +1,8 @@
 blueprints
 
+*.log.1
+*.log.fault
+
 secrets.*
 secrets.yaml
 *.token

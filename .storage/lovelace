@@ -11,7 +11,7 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "input_boolean.wakeup_weekend"
+                                    "entity": "input_boolean.wakeup_enabled"
                                 },
                                 {
                                     "entity": "sensor.lightsalarmtomorrow"
@@ -118,7 +118,7 @@
                                     "entity": "light.wc"
                                 },
                                 {
-                                    "entity": "switch.ochtend_lamp"
+                                    "entity": "light.ochtend_lamp"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -141,6 +141,9 @@
                             "entities": [
                                 {
                                     "entity": "input_boolean.wakeup_enabled"
+                                },
+                                {
+                                    "entity": "input_boolean.wakeup_weekend"
                                 },
                                 {
                                     "entity": "input_number.wakeup_time_transition"

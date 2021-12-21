@@ -4,6 +4,7 @@ from typing import Dict, Any
 
 import appdaemon.plugins.hass.hassapi as hass
 from pymongo import MongoClient
+from pymongo.collection import Collection
 
 MONGO_HOST = 'mongo'
 MONGO_PORT = 27017
@@ -129,7 +130,7 @@ class ReminderService(hass.Hass):
 
     def setup_storage(self):
         storage_client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
-        self.collection = storage_client.ad_db.reminders
+        self.collection: Collection = storage_client.ad_db.reminders
         self.close_storage_conn = lambda: storage_client.close()
 
     def load_state(self):
@@ -166,7 +167,7 @@ class ReminderService(hass.Hass):
         record = self._get_reminder_record(data)
         if record.send_at < self.now():
             record.send_at += timedelta(days=1)
-        storage_id = self.collection.insert(record.encode())
+        storage_id = self.collection.insert_one(record.encode())
         self._schedule_reminder(record.send_at, storage_id)
         self.log(f'Scheduled reminder at {record.send_at}')
         self._notify_of_set_reminder(record)
@@ -245,14 +246,14 @@ class ReminderService(hass.Hass):
         """ Formats timedelta like 12u30, 1u00 (NL localized)"""
         return "u".join(
             str(td + timedelta(seconds=1)
-            ).split(":")[:-1])
+                ).split(":")[:-1])
 
     def now(self) -> datetime:
         """ Returns the local datetime, aware with the current timezone """
-        return self.datetime(aware=True)
+        return self.datetime(aware=True)  # noqa
 
     def today(self) -> date:
-        return self.date()
+        return self.date()  # noqa
 
     def __del__(self):
         self.close_storage_conn()

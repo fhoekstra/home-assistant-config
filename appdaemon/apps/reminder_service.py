@@ -124,29 +124,48 @@ class ReminderService(hass.Hass):
 
     def initialize(self):
         self.setup_storage()
-        self.load_state()
+        self.load_state({})
         self.listen_event(self.set_reminder, event='ad_reminder_set')
         self.listen_event(self.read_all_reminders, event='ad_reminder_read')
+        self.run_minutely(self.load_state,
+                          start=self.now().replace(second=1, microsecond=0).time())
 
     def setup_storage(self):
         storage_client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
         self.collection: Collection = storage_client.ad_db.reminders
         self.close_storage_conn = lambda: storage_client.close()
 
-    def load_state(self):
-        unsent_reminders = self.collection.find({'is_sent': False})
-        for doc in unsent_reminders:
-            self._schedule_unsent_reminder(doc)
+    def load_state(self, kwargs):
+        unsent_reminders = self.collection.find({
+            'is_sent': False,
+            'send_at': {
+                '$lte': (self.now() + timedelta(minutes=1)).replace(second=0, microsecond=0)
+            }
+        })
+        [self._send_reminder(doc)
+         for doc in unsent_reminders]
 
-    def _schedule_unsent_reminder(self, doc):
+    def _send_reminder(self, doc):
         record = ReminderRecord.decode(doc)
-        send_at = record.send_at
+        send_at = record.send_at.replace(second=0, microsecond=0)
+        now = self.now().replace(second=0, microsecond=0)
+        if send_at > now:
+            return
+        if send_at == now:
+            self.send_reminder({"storage_id": record.id_})
+            return
+        self._send_reminder_if_it_is_late(record, send_at)
+
+    def _send_reminder_if_it_is_late(self, record, send_at):
         self.log(f'Found unsent reminder that was scheduled for {send_at}')
-        if send_at < self.now():
-            rounded_dt = record.send_at.replace(microsecond=0)
-            record.message += f' (Originally scheduled to be sent at {rounded_dt})'
-            send_at = self.now() + timedelta(seconds=1)
-        self._schedule_reminder(send_at, record.id_)
+        record.message += f' (Originally scheduled to be sent at {send_at})'
+        self.collection.update_one(
+            filter={"_id": record.id_},
+            update={'$set': {
+                'message': record.message,
+                'modified_on': self.now().astimezone(timezone.utc)  # The DB needs UTC
+            }})
+        self.send_reminder(record.id_)
 
     def set_reminder(self, event_name, data, kwargs):
         """
@@ -163,19 +182,13 @@ class ReminderService(hass.Hass):
               message to
             - if not given, it will be sent to the default target
         """
-        self.log(f'Received event of type {event_name}')
-        record = self._get_reminder_record(data)
+        self.log(f'Received event of type {event_name}\n with data: {data}')
+        record = self._create_reminder_record(data)
         if record.send_at < self.now():
             record.send_at += timedelta(days=1)
         storage_id = self.collection.insert_one(record.encode())
-        self._schedule_reminder(record.send_at, storage_id)
         self.log(f'Scheduled reminder at {record.send_at}')
         self._notify_of_set_reminder(record)
-
-    def _schedule_reminder(self, send_at, storage_id):
-        self.run_at(self.send_reminder,
-                    start=send_at.astimezone(),
-                    storage_id=storage_id)
 
     def _notify_of_set_reminder(self, record: ReminderRecord):
         time_to_reminder: timedelta = record.send_at - self.now()
@@ -186,7 +199,7 @@ class ReminderService(hass.Hass):
                     ' stuur ik: '
                     f'"{record.message}"')
 
-    def _get_reminder_record(self, data: dict) -> ReminderRecord:
+    def _create_reminder_record(self, data: dict) -> ReminderRecord:
         send_at = self._get_reminder_time(data)
         return ReminderRecord.new(
             message=data.get("message",

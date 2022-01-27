@@ -165,9 +165,9 @@ class ReminderService(hass.Hass):
                 'message': record.message,
                 'modified_on': self.now().astimezone(timezone.utc)  # The DB needs UTC
             }})
-        self.send_reminder(record.id_)
+        self.send_reminder({"storage_id": record.id_})
 
-    def set_reminder(self, event_name, data, kwargs):
+    def set_reminder(self, event_name: str, data, kwargs: dict):
         """
         :param data: requires 'at' or 'in' key, with as value a dictionary of 
         the keyword arguments to:
@@ -234,7 +234,7 @@ class ReminderService(hass.Hass):
         except TypeError:
             return DEFAULT_TIME_FOR_REMINDER
 
-    def send_reminder(self, kwargs):
+    def send_reminder(self, kwargs: dict):
         this_reminder_by_id = {"_id": kwargs["storage_id"]}
         record = ReminderRecord.decode(
             self.collection.find_one(this_reminder_by_id))
@@ -249,7 +249,7 @@ class ReminderService(hass.Hass):
                 'modified_on': self.now().astimezone(timezone.utc)  # The DB needs UTC
             }})
 
-    def read_all_reminders(self, event_name, data, kwargs):
+    def read_all_reminders(self, event_name: str, data, kwargs: dict):
         self.log(f'Received event of type {event_name}')
         docs = self.collection.find()
         self.log(str(list(docs)))

@@ -1,5 +1,6 @@
 {
     "version": 1,
+    "minor_version": 1,
     "key": "lovelace",
     "data": {
         "config": {
@@ -57,13 +58,16 @@
                                     "entity": "light.woonkamer"
                                 },
                                 {
-                                    "entity": "light.nachtkastje"
-                                },
-                                {
-                                    "entity": "light.slaapkamer_plafond"
+                                    "entity": "light.slaapkamer"
                                 },
                                 {
                                     "entity": "light.gang"
+                                },
+                                {
+                                    "entity": "light.badkamer"
+                                },
+                                {
+                                    "entity": "light.wc"
                                 }
                             ],
                             "title": "Lampen",
@@ -112,10 +116,10 @@
                                     "entity": "light.hoek_woonkamer"
                                 },
                                 {
-                                    "entity": "light.badkamer"
+                                    "entity": "light.nachtkastje"
                                 },
                                 {
-                                    "entity": "light.wc"
+                                    "entity": "light.slaapkamer_plafond"
                                 },
                                 {
                                     "entity": "light.ochtend_lamp"
@@ -160,13 +164,13 @@
                                     "entity": "input_boolean.auto_color_enabled"
                                 },
                                 {
+                                    "entity": "input_boolean.automatic_color_temp_adjustment"
+                                },
+                                {
                                     "entity": "input_boolean.automatic_color_time_adjustment"
                                 },
                                 {
                                     "entity": "input_number.desired_color_temperature"
-                                },
-                                {
-                                    "entity": "input_boolean.automatic_color_temp_adjustment"
                                 }
                             ],
                             "title": "Kleurverandering lampen",

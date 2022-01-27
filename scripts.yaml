@@ -88,7 +88,6 @@ remind_telegram:
         target: "{{chat_id}}"
         message: >-
           Het is nu {{hours}} uur later.
-
 remind_both_telegram:
   mode: parallel
   sequence:
@@ -96,4 +95,17 @@ remind_both_telegram:
       data_template:
         chat_id: !secret home_group_telegram_id
         hours: "{{hours}}"
-  
+trigger_light_alarm_early:
+  mode: single
+  sequence:
+    - event: wake_up_lights_start_trigger
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.morning_start_minutes
+      data:
+        value: now().minute
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.morning_start_hour
+      data:
+        value: now().hour - 1

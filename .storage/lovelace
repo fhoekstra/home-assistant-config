@@ -10,6 +10,27 @@
                     "badges": [],
                     "cards": [
                         {
+                            "type": "conditional",
+                            "conditions": [
+                                {
+                                    "entity": "sensor.almost_light_alarm",
+                                    "state": "True"
+                                }
+                            ],
+                            "card": {
+                                "type": "button",
+                                "entity": "script.trigger_light_alarm_early",
+                                "name": "Start lichtwekker nu",
+                                "icon": "mdi:play",
+                                "tap_action": {
+                                    "action": "call-service",
+                                    "service": "script.trigger_light_alarm_early",
+                                    "service_data": {},
+                                    "target": {}
+                                }
+                            }
+                        },
+                        {
                             "entities": [
                                 {
                                     "entity": "input_boolean.wakeup_enabled"

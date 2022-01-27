@@ -76,3 +76,9 @@
         {% else %}
           Before
         {% endif %}
+    almost_light_alarm:
+      value_template: >-
+        {% set alarm_entity = states.input_datetime.morning_start_time.state %}
+        {% set alarm_dt = strptime(alarm_entity, "%H:%M:%S").replace(
+          year = now().year, month = now().month, day = now().day, tzinfo=now().tzinfo) %}
+        {{ (now() < alarm_dt) and ((alarm_dt - now()) < timedelta(hours=3)) }}

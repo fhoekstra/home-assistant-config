@@ -102,10 +102,10 @@ trigger_light_alarm_early:
     - service: input_number.set_value
       target:
         entity_id: input_number.morning_start_minutes
-      data:
-        value: now().minute
+      data_template:
+        value: "{{now().minute}}"
     - service: input_number.set_value
       target:
         entity_id: input_number.morning_start_hour
-      data:
-        value: now().hour - 1
+      data_template:
+        value: "{{now().hour - 1}}"

@@ -3,11 +3,20 @@ from typing import Tuple, Iterable
 
 import appdaemon.plugins.hass.hassapi as hass
 
-LIGHT_NAMES = ('woonkamer', 'gang', 'wc', 'badkamer', 'nachtkastje', 'slaapkamer_plafond')
+LIGHT_NAMES = (
+    'woonkamer',
+    'gang',
+    'voorraadhok',
+    'wc',
+    'badkamer',
+    'nachtkastje',
+    'slaapkamer_plafond'
+    )
 LIGHTS_TO_CHANGE = tuple(f'light.{name}' for name in LIGHT_NAMES)
 
 MIN_COLOR_TEMP = 250.
 MAX_COLOR_TEMP = 455.
+
 DESIRED_COLOR_ENTITY = 'input_number.desired_color_temperature'
 MORNING_START_TIME = 'input_datetime.morning_start_time'
 EVE_START_TIME = 'input_datetime.early_eve_start_time'

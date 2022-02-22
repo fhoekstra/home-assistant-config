@@ -7,8 +7,9 @@ Feel free to use whatever you find here for your own Home Assistant or other hom
 Includes automations for the following use cases:
 
 * [:zap:][4] smart lights:
-  * changing color temperature automatically based on time of day and of year [:snake:][2]
-  * multi-stage wake-up light sequence, interruptable [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)][3] [:camel:][5]
+  * Changing color temperature automatically based on time of day and of year [:snake:][2]
+  * Turning lights on and off based on motion :camel:
+  * Multi-stage wake-up light sequence, interruptable [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)][3] [:camel:][5]
   * Turning lights off while away from home [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1] [:camel:][5]
   * Putting lights in vacation mode, prompted when an appropriate calendar event is detected :calendar: :camel:
 * other:
@@ -25,10 +26,11 @@ I use the following components to implement this
 * 1 WD Green 2.5" SATA SSD 120GB, connected with a Startech USB 3.0 to SATA 2.5" adapter
 * :zap: Phoscon **ConBee 2** Zigbee USB gateway
 * :zap: Zigbee devices:
-  * 9 IKEA Trådfri lights (not RGB, but white to yellow)
+  * 10 IKEA Trådfri lights (not RGB, but white spectrum 2200 K to 4000 K)
   * 6 IKEA Trådfri remotes with 5 buttons each
   * 1 IKEA Trådfri wireless control outlet
   * 1 IKEA TrådFri on/off remote
+  * 1 IKEA TrådFri motion sensor
 
 ### Integrations
 
@@ -76,7 +78,6 @@ Especially interesting to share in this, is [the first node on the left](https:/
 This flow toggles and monitors an `input_boolean` in HA to indicate whether the wake-up lights sequence is, and should be, in progress.
 The total duration is set in another input in HA, and divided by the number of transitions of :zap: bulbs to set the transition per bulb. At the end, a switch is used to turn on a very bright white light.
 ![Wake-up lights](https://raw.githubusercontent.com/fhoekstra/home-assistant-config/master/node-red-pictures-and-examples/wake-up-lights-flow.png)
-
 
 ## Resources
 

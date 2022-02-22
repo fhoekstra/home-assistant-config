@@ -271,6 +271,57 @@
                     "icon": "",
                     "path": "settings",
                     "title": "Modes"
+                },
+                {
+                    "icon": "mdi:gauge",
+                    "visible": [
+                        {
+                            "user": "48b7834f1bcf46ff9591f59020b99bf2"
+                        }
+                    ],
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.motion_voorraadhok_on_off"
+                                },
+                                {
+                                    "entity": "sensor.motion_voorraadhok_power"
+                                },
+                                {
+                                    "entity": "sensor.adguard_average_processing_speed"
+                                },
+                                {
+                                    "entity": "sensor.adguard_dns_queries_blocked_ratio"
+                                },
+                                {
+                                    "entity": "sensor.adguard_dns_queries"
+                                },
+                                {
+                                    "entity": "sensor.wc_knop_319c89fe_power"
+                                },
+                                {
+                                    "entity": "sensor.badkamer_knop_power"
+                                },
+                                {
+                                    "entity": "sensor.slaapkamer_knop"
+                                },
+                                {
+                                    "entity": "sensor.voordeur_knop_power"
+                                },
+                                {
+                                    "entity": "sensor.washok_knop_power"
+                                },
+                                {
+                                    "entity": "sensor.woonkamer_knop_power"
+                                }
+                            ],
+                            "hours_to_show": 24,
+                            "refresh_interval": 0
+                        }
+                    ]
                 }
             ]
         }

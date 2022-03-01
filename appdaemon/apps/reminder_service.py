@@ -127,6 +127,7 @@ class ReminderService(hass.Hass):
         self.load_state({})
         self.listen_event(self.set_reminder, event='ad_reminder_set')
         self.listen_event(self.read_all_reminders, event='ad_reminder_read')
+        self.listen_event(self.delete_all_unsent_reminders, event='ad_reminder_clear')
         self.run_minutely(self.load_state,
                           start=self.now().replace(second=1, microsecond=0).time())
 
@@ -253,6 +254,12 @@ class ReminderService(hass.Hass):
         self.log(f'Received event of type {event_name}')
         docs = self.collection.find()
         self.log(str(list(docs)))
+    
+    def delete_all_unsent_reminders(self, event_name: str, data, kwargs: dict):
+        self.log(f'Received event of type {event_name}')
+        delete_result = self.collection.delete_many({'is_sent': False})
+        self.log(f'Deletion{" not" if not delete_result.acknowledged else ""} acknowledged'
+                 f' and {delete_result.deleted_count} documents deleted.')
 
     @staticmethod
     def _format_as_hours_minutes(td: timedelta) -> str:

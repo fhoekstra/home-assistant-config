@@ -33,3 +33,30 @@
           hours: "{{trigger.event.data.data[10:-1]}}"
         send_to:
           chat_id: "{{trigger.event.data.chat_id}}"
+- id: "1565175449112"
+  alias: Set reminder Telegram direct command
+  mode: parallel # Makes it possible to have multiple reminders in parallel
+  trigger:
+    - platform: event
+      event_type: telegram_command
+      event_data:
+        command: "/setremind"
+  condition: []
+  action:
+    - event: ad_reminder_set
+      event_data:
+        in:
+          hours: "{{trigger.event.data.args[0].split('h')[0]}}"
+        send_to:
+          chat_id: "{{trigger.event.data.chat_id}}"
+- id: "1565175449113"
+  alias: Set reminder Telegram direct command
+  mode: parallel
+  trigger:
+    - platform: event
+      event_type: telegram_command
+      event_data:
+        command: "/clear_reminders"
+  condition: []
+  action:
+    - event: ad_reminder_clear

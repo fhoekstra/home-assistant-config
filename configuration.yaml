@@ -97,6 +97,7 @@ google:
 
 group: !include groups.yaml
 automation: !include_dir_merge_list automation/
+automation ui: !include automations.yaml
 script: !include scripts.yaml
 sensor: !include sensors.yaml
 light: !include lights.yaml

@@ -1,0 +1,219 @@
+- id: '1647089678324'
+  alias: Reminder service Home
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ha_reminder_set
+  condition:
+    - alias: "Is destined for Home?"
+      condition: or
+      conditions:
+        - condition: template
+          value_template: >-
+            {% set dest_dict = trigger.event.data.send_to%}
+            {% if 'notify' in dest_dict %}
+              {{dest_dict['notify'] == 'teledobbygroup'}}
+            {% else %}
+              False
+            {% endif %}
+        - condition: template
+          value_template: !secret is_destined_to_home_chat_id
+  action:
+  - service: notify.teledobbygroup
+    data_template:
+      message: "You just scheduled a reminder"
+  - delay:
+      days: >-
+        {% set time_unit = "days" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      hours: >-
+        {% set time_unit = "hours" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      minutes: >-
+        {% set time_unit = "minutes" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      seconds: >-
+        {% set time_unit = "seconds" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      milliseconds: >-
+        {% set time_unit = "milliseconds" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+  - service: notify.teledobbygroup
+    data_template:
+      message: >+
+        {{ trigger.event.data.get("message", "Reminder!") }}
+
+        This reminder was set at: {{trigger.event.time_fired}}
+  mode: parallel
+  max: 10
+- id: '1647089421524'
+  alias: Reminder service C
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ha_reminder_set
+  condition:
+    - alias: "Is destined for C?"
+      condition: or
+      conditions:
+        - condition: template
+          value_template: >-
+            {% set dest_dict = trigger.event.data.send_to%}
+            {% if 'notify' in dest_dict %}
+              {{dest_dict['notify'] == 'teledobbygf'}}
+            {% else %}
+              False
+            {% endif %}
+        - condition: template
+          value_template: !secret is_destined_to_gf_chat_id
+  action:
+  - service: notify.teledobbygf
+    data_template:
+      message: "You just scheduled a reminder"
+  - delay:
+      days: >-
+        {% set time_unit = "days" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      hours: >-
+        {% set time_unit = "hours" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      minutes: >-
+        {% set time_unit = "minutes" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      seconds: >-
+        {% set time_unit = "seconds" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      milliseconds: >-
+        {% set time_unit = "milliseconds" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+  - service: notify.teledobbygf
+    data_template:
+      message: >+
+        {{ trigger.event.data.get("message", "Reminder!") }}
+
+        This reminder was set at: {{trigger.event.time_fired}}
+  mode: parallel
+  max: 10
+- id: '1647085560504'
+  alias: Reminder service F
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ha_reminder_set
+  condition:
+    - alias: "Is destined for F?"
+      condition: or
+      conditions:
+        - condition: template
+          value_template: >-
+            {% set dest_dict = trigger.event.data.send_to%}
+            {% if 'notify' in dest_dict %}
+              {{dest_dict['notify'] == 'teledobbyme'}}
+            {% else %}
+              False
+            {% endif %}
+        - condition: template
+          value_template: !secret is_destined_to_my_chat_id
+  action:
+  - service: notify.teledobbyme
+    data_template:
+      message: "You just scheduled a reminder"
+  - delay:
+      days: >-
+        {% set time_unit = "days" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      hours: >-
+        {% set time_unit = "hours" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      minutes: >-
+        {% set time_unit = "minutes" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      seconds: >-
+        {% set time_unit = "seconds" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+      milliseconds: >-
+        {% set time_unit = "milliseconds" %}
+        {% set delta = trigger.event.data["in"] %}
+        {% if time_unit not in delta %}
+          0
+        {% else %}
+          {{ delta.get(time_unit, 0) | int(0)}}
+        {% endif %}
+  - service: notify.teledobbyme
+    data_template:
+      message: >+
+        {{ trigger.event.data.get("message", "Reminder!") }}
+
+        This reminder was set at: {{trigger.event.time_fired}}
+  mode: parallel
+  max: 10

@@ -27,7 +27,7 @@
         command: "/setremind"
   condition: []
   action:
-    - event: ad_reminder_set
+    - event: ha_reminder_set
       event_data:
         in:
           hours: "{{trigger.event.data.data[10:-1]}}"
@@ -43,7 +43,7 @@
         command: "/setremind"
   condition: []
   action:
-    - event: ad_reminder_set
+    - event: ha_reminder_set
       event_data:
         in:
           hours: "{{trigger.event.data.args[0].split('h')[0]}}"

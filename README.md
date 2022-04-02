@@ -13,7 +13,7 @@ Includes automations for the following use cases:
   * Turning lights off while away from home [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1] [:camel:][5]
   * Putting lights in vacation mode, prompted when an appropriate calendar event is detected :calendar: :camel:
 * other:
-  * Reminders for when the washing machine is finished can be scheduled through a button next to the washing machine [:zap:][4] [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)][3] [:snake:][7] [![mongo_icon_20px](https://user-images.githubusercontent.com/32362869/118363357-46a5f280-b594-11eb-9fe9-076f73f2528a.png)][6] [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1]
+  * Reminders for when the washing machine is finished can be scheduled through a button next to the washing machine [:zap:][4] [![NR_icon_16px](https://user-images.githubusercontent.com/32362869/118363988-ff6d3100-b596-11eb-9eb8-c17dce3bda45.png)][3] [![Telegram_2019_simple_logo](https://user-images.githubusercontent.com/32362869/118362883-f0d04b00-b591-11eb-998e-da7208dbcbe4.png)][1] :camel:
   * The admin user is prompted when there are available updates [:snake:][2] :iphone:
 
 ## Components
@@ -53,8 +53,6 @@ I use the following components to implement this
 ### Add-ons, other
 
 * [:zap: The **deconz**][4] instance for the Zigbee network
-* [![mongo_icon_20px](https://user-images.githubusercontent.com/32362869/118363357-46a5f280-b594-11eb-9fe9-076f73f2528a.png)
- MongoDB][6] as a lightweight persistence service [for reminders][7]. This ensures reminders do not get lost/forgotten when Home Assistant is restarted.
 * Some utility add-ons:
   * **VS Code** in front-end in browser
   * **Samba share** for easy access to the machine file from Windows pc
@@ -90,5 +88,3 @@ To see how other people have been using Home Assistant, have a look at the forum
 [3]: https://nodered.org/
 [4]: https://www.home-assistant.io/integrations/deconz/
 [5]: https://www.home-assistant.io/docs/automation/
-[6]: https://www.mongodb.com/
-[7]: https://github.com/fhoekstra/home-assistant-config/tree/master/appdaemon/apps/reminder_service.py

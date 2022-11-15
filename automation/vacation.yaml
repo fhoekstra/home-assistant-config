@@ -7,22 +7,22 @@
 #############################################################################
 ## Turn on/off indoor lights randomly
 #############################################################################
-- id: 'vakantie_toggle_lights'
+- id: "vakantie_toggle_lights"
   alias: Vakantie - Random Away Lights
 
   trigger:
     - platform: time_pattern
-      minutes: '/15'
+      minutes: "/15"
 
   condition:
     - condition: state
       entity_id: input_boolean.vacation
-      state: 'on'
+      state: "on"
     - condition: sun
       after: sunset
-      after_offset: '-01:35:00'
+      after_offset: "-01:35:00"
     - condition: time
-      before: '22:30:00'
+      before: "22:30:00"
 
   action:
     - delay: "00:{{ '{:02}'.format(range(0,30) | random | int) }}:00"
@@ -35,62 +35,62 @@
 ################################################################
 ## Stopping presence simulation randomly 22:30
 ################################################################
-- id: 'vakantie_turn_off_lights'
+- id: "vakantie_turn_off_lights"
   alias: Vakantie - turn off all lights
 
   trigger:
     - platform: time
-      at: '22:30:00'
+      at: "22:30:00"
 
   condition:
     - condition: state
       entity_id: input_boolean.vacation
-      state: 'on'
+      state: "on"
 
   action:
-    - delay: '00:{{ range(15,59) | random | int }}:00'
+    - delay: "00:{{ range(15,59) | random | int }}:00"
     - service: homeassistant.turn_off
       entity_id: group.simulation_lights
 
 # Telegram asks to turn on vacation mode based on Google Calendar event
-- id: 'vakantie_telegram_vraag'
+- id: "vakantie_telegram_vraag"
   alias: Vakantie - Telegram vraag
   trigger:
     - platform: state
       entity_id: calendar.vacation_c
-      to: 'on'
+      to: "on"
     - platform: state
       entity_id: calendar.vacation_f
-      to: 'on'
+      to: "on"
   action:
-  - service: telegram_bot.send_message
-    data_template:
-      target: !secret home_group_telegram_id
-      message: |
+    - service: telegram_bot.send_message
+      data_template:
+        target: !secret home_group_telegram_id
+        message: |
           Ik zie vakantie in de agenda staan.
           Zal ik het huis in de vakantiestand zetten?
-      inline_keyboard:
-        - "Ja:/vakantie_aan, Nee:/doe_niets"
-- id: 'vakantie_aan'
+        inline_keyboard:
+          - "Ja:/vakantie_aan, Nee:/doe_niets"
+- id: "vakantie_aan"
   alias: Vakantie - Aan via Telegram
   trigger:
-  - platform: event
-    event_type: telegram_callback
-    event_data:
-      command: '/vakantie_aan'
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        command: "/vakantie_aan"
   action:
-  - service: input_boolean.turn_on
-    data:
-      entity_id: input_boolean.vacation
-  - service: light.turn_off
-    data:
-      entity_id: all
-  - service: input_boolean.turn_off
-    data:
-      entity_id: input_boolean.wakeup_enabled
-  - service: telegram_bot.send_message
-    data_template:
-      target: "{{trigger.event.data.chat_id}}"
-      message: >-
-        OK, ik heb het licht uitgedaan en de vakantie-stand aangezet 
-        en de lichtwekker uitgezet
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.vacation
+    - service: light.turn_off
+      data:
+        entity_id: all
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.wakeup_enabled
+    - service: telegram_bot.send_message
+      data_template:
+        target: "{{trigger.event.data.chat_id}}"
+        message: >-
+          OK, ik heb het licht uitgedaan en de vakantie-stand aangezet 
+          en de lichtwekker uitgezet

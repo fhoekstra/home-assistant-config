@@ -1,329 +1,325 @@
 {
-    "version": 1,
-    "minor_version": 1,
-    "key": "lovelace",
-    "data": {
-        "config": {
-            "title": "FC Raven",
-            "views": [
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace",
+  "data": {
+    "config": {
+      "title": "FC Raven",
+      "views": [
+        {
+          "path": "default_view",
+          "title": "Home",
+          "icon": "mdi:home",
+          "badges": [],
+          "cards": [
+            {
+              "type": "conditional",
+              "conditions": [
                 {
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "conditional",
-                            "conditions": [
-                                {
-                                    "entity": "sensor.almost_light_alarm",
-                                    "state": "True"
-                                }
-                            ],
-                            "card": {
-                                "type": "button",
-                                "entity": "script.trigger_light_alarm_early",
-                                "name": "Start lichtwekker nu",
-                                "icon": "mdi:play",
-                                "tap_action": {
-                                    "action": "call-service",
-                                    "service": "script.trigger_light_alarm_early",
-                                    "service_data": {},
-                                    "target": {}
-                                }
-                            }
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "input_boolean.wakeup_enabled"
-                                },
-                                {
-                                    "entity": "sensor.lightsalarmtomorrow"
-                                },
-                                {
-                                    "entity": "input_number.morning_start_hour"
-                                },
-                                {
-                                    "entity": "input_number.morning_start_minutes"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Lichtwekker",
-                            "type": "entities"
-                        },
-                        {
-                            "card": {
-                                "entity": "script.freek_evening",
-                                "icon": "mdi:sleep",
-                                "icon_height": 3,
-                                "show_name": false,
-                                "tap_action": {
-                                    "action": "call-service",
-                                    "service": "script.freek_evening"
-                                },
-                                "type": "entity-button"
-                            },
-                            "conditions": [
-                                {
-                                    "entity": "sensor.timeofday",
-                                    "state": "Night"
-                                },
-                                {
-                                    "entity": "sensor.noon",
-                                    "state": "After"
-                                }
-                            ],
-                            "type": "conditional"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "light.woonkamer"
-                                },
-                                {
-                                    "entity": "light.slaapkamer"
-                                },
-                                {
-                                    "entity": "light.gang"
-                                },
-                                {
-                                    "entity": "light.badkamer"
-                                },
-                                {
-                                    "entity": "light.wc"
-                                }
-                            ],
-                            "title": "Lampen",
-                            "type": "entities"
-                        },
-                        {
-                            "card": {
-                                "entity": "light.keuken",
-                                "icon_height": 3,
-                                "show_name": false,
-                                "tap_action": {
-                                    "action": "call-service",
-                                    "service": "script.freek_morning"
-                                },
-                                "type": "entity-button"
-                            },
-                            "conditions": [
-                                {
-                                    "entity": "sensor.timeofday",
-                                    "state": "Night"
-                                },
-                                {
-                                    "entity": "sensor.noon",
-                                    "state": "Before"
-                                },
-                                {
-                                    "entity": "light.woonkamer",
-                                    "state": "off"
-                                }
-                            ],
-                            "type": "conditional"
-                        },
-                        {
-                            "entity": "weather.home",
-                            "type": "weather-forecast"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "light.bureau"
-                                },
-                                {
-                                    "entity": "light.keuken"
-                                },
-                                {
-                                    "entity": "light.hoek_woonkamer"
-                                },
-                                {
-                                    "entity": "light.nachtkastje"
-                                },
-                                {
-                                    "entity": "light.slaapkamer_plafond"
-                                },
-                                {
-                                    "entity": "light.ochtend_lamp"
-                                }
-                            ],
-                            "show_header_toggle": true,
-                            "state_color": true,
-                            "title": "Meer lampen",
-                            "type": "entities"
-                        },
-                        {
-                            "entity": "media_player.living_room",
-                            "type": "media-control"
-                        }
-                    ],
-                    "path": "default_view",
-                    "title": "Home"
-                },
-                {
-                    "badges": [],
-                    "cards": [
-                        {
-                            "entities": [
-                                {
-                                    "entity": "input_boolean.wakeup_enabled"
-                                },
-                                {
-                                    "entity": "input_boolean.wakeup_weekend"
-                                },
-                                {
-                                    "entity": "input_number.wakeup_time_transition"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "type": "entities",
-                            "title": "Lichtwekker"
-                        },
-                        {
-                            "type": "entities",
-                            "entities": [
-                                {
-                                    "entity": "input_boolean.auto_color_enabled"
-                                },
-                                {
-                                    "entity": "input_boolean.automatic_color_temp_adjustment"
-                                },
-                                {
-                                    "entity": "input_boolean.automatic_color_time_adjustment"
-                                },
-                                {
-                                    "entity": "input_number.desired_color_temperature"
-                                }
-                            ],
-                            "title": "Kleurverandering lampen",
-                            "show_header_toggle": false
-                        },
-                        {
-                            "type": "conditional",
-                            "conditions": [
-                                {
-                                    "entity": "input_boolean.automatic_color_time_adjustment",
-                                    "state": "on"
-                                }
-                            ],
-                            "card": {
-                                "type": "glance",
-                                "entities": [
-                                    {
-                                        "entity": "input_datetime.early_eve_start_time"
-                                    },
-                                    {
-                                        "entity": "input_datetime.night_start_time"
-                                    }
-                                ],
-                                "title": "Tijden kleurverandering"
-                            }
-                        },
-                        {
-                            "type": "conditional",
-                            "conditions": [
-                                {
-                                    "entity": "input_boolean.automatic_color_time_adjustment",
-                                    "state": "off"
-                                }
-                            ],
-                            "card": {
-                                "type": "entities",
-                                "entities": [
-                                    {
-                                        "entity": "input_datetime.early_eve_start_time"
-                                    },
-                                    {
-                                        "entity": "input_datetime.night_start_time"
-                                    }
-                                ],
-                                "title": "Tijden kleurverandering"
-                            }
-                        },
-                        {
-                            "type": "entities",
-                            "entities": [
-                                {
-                                    "entity": "light.all_lights_except_ochtend_lamp"
-                                },
-                                {
-                                    "entity": "light.all_lights"
-                                }
-                            ]
-                        },
-                        {
-                            "entity": "input_boolean.vacation",
-                            "hold_action": {
-                                "action": "more-info"
-                            },
-                            "icon_height": "60px",
-                            "show_icon": true,
-                            "show_name": true,
-                            "show_state": true,
-                            "tap_action": {
-                                "action": "toggle",
-                                "confirmation": {
-                                    "text": "Are you sure you want to toggle vacation mode?"
-                                }
-                            },
-                            "type": "button"
-                        }
-                    ],
-                    "icon": "",
-                    "path": "settings",
-                    "title": "Modes"
-                },
-                {
-                    "icon": "mdi:gauge",
-                    "visible": [
-                        {
-                            "user": "48b7834f1bcf46ff9591f59020b99bf2"
-                        }
-                    ],
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "history-graph",
-                            "entities": [
-                                {
-                                    "entity": "binary_sensor.motion_voorraadhok_on_off"
-                                },
-                                {
-                                    "entity": "sensor.motion_voorraadhok_power"
-                                },
-                                {
-                                    "entity": "sensor.adguard_average_processing_speed"
-                                },
-                                {
-                                    "entity": "sensor.adguard_dns_queries_blocked_ratio"
-                                },
-                                {
-                                    "entity": "sensor.adguard_dns_queries"
-                                },
-                                {
-                                    "entity": "sensor.wc_knop_319c89fe_power"
-                                },
-                                {
-                                    "entity": "sensor.badkamer_knop_power"
-                                },
-                                {
-                                    "entity": "sensor.slaapkamer_knop"
-                                },
-                                {
-                                    "entity": "sensor.voordeur_knop_power"
-                                },
-                                {
-                                    "entity": "sensor.washok_knop_power"
-                                },
-                                {
-                                    "entity": "sensor.woonkamer_knop_power"
-                                }
-                            ],
-                            "hours_to_show": 24,
-                            "refresh_interval": 0
-                        }
-                    ]
+                  "entity": "sensor.almost_light_alarm",
+                  "state": "True"
                 }
-            ]
+              ],
+              "card": {
+                "type": "button",
+                "entity": "script.trigger_light_alarm_early",
+                "name": "Start lichtwekker nu",
+                "icon": "mdi:play",
+                "tap_action": {
+                  "action": "call-service",
+                  "service": "script.trigger_light_alarm_early",
+                  "service_data": {},
+                  "target": {}
+                }
+              }
+            },
+            {
+              "entities": [
+                {
+                  "entity": "input_boolean.wakeup_enabled"
+                },
+                {
+                  "entity": "sensor.lightsalarmtomorrow"
+                },
+                {
+                  "entity": "input_number.morning_start_hour"
+                },
+                {
+                  "entity": "input_number.morning_start_minutes"
+                }
+              ],
+              "show_header_toggle": false,
+              "title": "Lichtwekker",
+              "type": "entities"
+            },
+            {
+              "entities": [
+                {
+                  "entity": "light.woonkamer"
+                },
+                {
+                  "entity": "light.slaapkamer"
+                },
+                {
+                  "entity": "light.gang"
+                },
+                {
+                  "entity": "light.badkamer"
+                },
+                {
+                  "entity": "light.wc"
+                }
+              ],
+              "title": "Lampen",
+              "type": "entities"
+            },
+            {
+              "show_current": true,
+              "show_forecast": false,
+              "entity": "weather.home",
+              "type": "weather-forecast",
+              "secondary_info_attribute": "wind_speed"
+            },
+            {
+              "entities": [
+                {
+                  "entity": "light.boven_bureau"
+                },
+                {
+                  "entity": "light.keuken"
+                },
+                {
+                  "entity": "light.hoek_woonkamer"
+                },
+                {
+                  "entity": "light.nachtkastje"
+                },
+                {
+                  "entity": "light.slaapkamer_plafond"
+                },
+                {
+                  "entity": "light.ochtend_lamp"
+                }
+              ],
+              "show_header_toggle": true,
+              "state_color": true,
+              "title": "Meer lampen",
+              "type": "entities"
+            },
+            {
+              "entity": "media_player.living_room",
+              "type": "media-control"
+            }
+          ]
+        },
+        {
+          "icon": "mdi:cog",
+          "path": "settings",
+          "title": "Modes",
+          "badges": [],
+          "cards": [
+            {
+              "entities": [
+                {
+                  "entity": "input_boolean.wakeup_enabled"
+                },
+                {
+                  "entity": "input_boolean.wakeup_weekend"
+                },
+                {
+                  "entity": "input_number.wakeup_time_transition"
+                }
+              ],
+              "show_header_toggle": false,
+              "type": "entities",
+              "title": "Lichtwekker"
+            },
+            {
+              "type": "entities",
+              "entities": [
+                {
+                  "entity": "input_boolean.auto_color_enabled"
+                },
+                {
+                  "entity": "input_boolean.automatic_color_temp_adjustment"
+                },
+                {
+                  "entity": "input_boolean.automatic_color_time_adjustment"
+                },
+                {
+                  "entity": "input_number.desired_color_temperature"
+                }
+              ],
+              "title": "Kleurverandering lampen",
+              "show_header_toggle": false
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "input_boolean.automatic_color_time_adjustment",
+                  "state": "on"
+                }
+              ],
+              "card": {
+                "type": "glance",
+                "entities": [
+                  {
+                    "entity": "input_datetime.early_eve_start_time"
+                  },
+                  {
+                    "entity": "input_datetime.night_start_time"
+                  }
+                ],
+                "title": "Tijden kleurverandering"
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "input_boolean.automatic_color_time_adjustment",
+                  "state": "off"
+                }
+              ],
+              "card": {
+                "type": "entities",
+                "entities": [
+                  {
+                    "entity": "input_datetime.early_eve_start_time"
+                  },
+                  {
+                    "entity": "input_datetime.night_start_time"
+                  }
+                ],
+                "title": "Tijden kleurverandering"
+              }
+            },
+            {
+              "type": "entities",
+              "entities": [
+                {
+                  "entity": "light.all_lights_except_ochtend_lamp"
+                },
+                {
+                  "entity": "light.all_lights"
+                }
+              ]
+            },
+            {
+              "entity": "input_boolean.vacation",
+              "hold_action": {
+                "action": "more-info"
+              },
+              "icon_height": "60px",
+              "show_icon": true,
+              "show_name": true,
+              "show_state": true,
+              "tap_action": {
+                "action": "toggle",
+                "confirmation": {
+                  "text": "Are you sure you want to toggle vacation mode?"
+                }
+              },
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "icon": "mdi:gauge",
+          "visible": [
+            {
+              "user": "48b7834f1bcf46ff9591f59020b99bf2"
+            }
+          ],
+          "badges": [],
+          "cards": [
+            {
+              "type": "history-graph",
+              "entities": [
+                {
+                  "entity": "sensor.motion_voorraadhok_power"
+                },
+                {
+                  "entity": "sensor.badkamer_knop_power"
+                },
+                {
+                  "entity": "sensor.voordeur_knop_power"
+                },
+                {
+                  "entity": "sensor.washok_knop_power"
+                },
+                {
+                  "entity": "sensor.woonkamer_knop_power"
+                },
+                {
+                  "entity": "sensor.wc_knop_power"
+                },
+                {
+                  "entity": "sensor.slaapkamer_on_off_battery"
+                }
+              ],
+              "refresh_interval": 0,
+              "hours_to_show": 120,
+              "title": "Battery power last 10 days"
+            },
+            {
+              "type": "history-graph",
+              "entities": [
+                {
+                  "entity": "sensor.adguard_dns_queries_blocked_ratio"
+                },
+                {
+                  "entity": "sensor.adguard_dns_queries"
+                },
+                {
+                  "entity": "sensor.adguard_average_processing_speed"
+                }
+              ],
+              "title": "Adguard stats past 10 days",
+              "hours_to_show": 120
+            }
+          ]
+        },
+        {
+          "theme": "Backend-selected",
+          "icon": "mdi:desk",
+          "visible": [
+            {
+              "user": "48b7834f1bcf46ff9591f59020b99bf2"
+            },
+            {
+              "user": "d4c53e6c64d842a89412ed4dd2ee5fbd"
+            },
+            {
+              "user": "57631e2ae9a942bf9a37b59473f5aabd"
+            }
+          ],
+          "badges": [],
+          "cards": [
+            {
+              "type": "light",
+              "entity": "light.scherm_backlight_f"
+            },
+            {
+              "show_name": true,
+              "show_icon": true,
+              "type": "button",
+              "tap_action": {
+                "action": "toggle"
+              },
+              "entity": "switch.adguard_protection",
+              "show_state": true
+            },
+            {
+              "type": "entities",
+              "entities": [
+                "light.voorraadhok"
+              ]
+            }
+          ]
         }
+      ]
     }
+  }
 }

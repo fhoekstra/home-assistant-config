@@ -1,6 +1,6 @@
 from appdaemontestframework import automation_fixture
 
-from apps.update_watch import UpdateWatcher, MY_SUPERVISOR_LINK, NOTIFY_ME
+from apps.update_watch import UpdateWatcher, MY_SETTINGS_LINK, NOTIFY_ME
 
 OLD_VERSION = '1.0'
 NEW_VERSION = '2.0'
@@ -37,5 +37,5 @@ def test_update_message_sent_for_add_on(given_that, update_watcher, assert_that)
     update_watcher.on_update_available('binary_sensor.node_red_update_available', 'state', 'off', 'on', {})
 
     assert_that(NOTIFY_ME).was.called_with(
-        message=f'Upgrade node_red in {MY_SUPERVISOR_LINK}'
+        message=f'Upgrade node_red in {MY_SETTINGS_LINK}'
     )

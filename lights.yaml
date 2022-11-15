@@ -1,6 +1,7 @@
 - platform: template
   lights:
     ochtend_lamp:
+      unique_id: '1762774307112'
       friendly_name: ochtend lamp
       value_template: "{{ states('switch.ochtend_lamp') }}"
       turn_on:
@@ -9,39 +10,3 @@
       turn_off:
         service: switch.turn_off
         entity_id: switch.ochtend_lamp
-- platform: group
-  name: woonkamer
-  entities:
-    - light.keuken_deurkant
-    - light.keuken_koelkastkant
-    - light.bureau
-    - light.hoek_woonkamer
-- platform: group
-  name: keuken
-  entities:
-    - light.keuken_deurkant
-    - light.keuken_koelkastkant
-- platform: group
-  name: slaapkamer
-  entities:
-    - light.nachtkastje
-    - light.slaapkamer_plafond
-- platform: group
-  name: all_lights
-  entities:
-    - light.woonkamer
-    - light.nachtkastje
-    - light.slaapkamer_plafond
-    - light.gang
-    - light.wc
-    - light.badkamer
-    - light.ochtend_lamp
-- platform: group
-  name: all_lights_except_ochtend_lamp
-  entities:
-    - light.woonkamer
-    - light.nachtkastje
-    - light.slaapkamer_plafond
-    - light.gang
-    - light.wc
-    - light.badkamer

@@ -57,11 +57,19 @@
   alias: Vakantie - Telegram vraag
   trigger:
     - platform: state
-      entity_id: calendar.vacation_c
+      entity_id: calendar.c_gcal
       to: "on"
     - platform: state
-      entity_id: calendar.vacation_f
+      entity_id: calendar.my_gcal
       to: "on"
+  condition:
+    alias: "F or C calendar says 'vakantie'"
+    condition: or
+    conditions:
+      - condition: template
+        value_template: "{{'Vakantie' in state_attr('calendar.my_gcal', 'message')}}"
+      - condition: template
+        value_template: "{{'Vakantie' in state_attr('calendar.c_gcal', 'message')}}"
   action:
     - service: telegram_bot.send_message
       data_template:

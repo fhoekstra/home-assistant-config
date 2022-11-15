@@ -5,6 +5,7 @@ import appdaemon.plugins.hass.hassapi as hass
 
 LIGHT_NAMES = (
     'woonkamer',
+    'scherm_backlight_f',
     'gang',
     'voorraadhok',
     'wc',

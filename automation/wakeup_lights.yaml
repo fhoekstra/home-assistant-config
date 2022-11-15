@@ -44,3 +44,16 @@
         {%- set m_in_s = (states('input_number.morning_start_minutes') | int * 60) -%}
         {%- set total_seconds = h_in_s + m_in_s -%}
         {{ (total_seconds | timestamp_custom('%H:%M',False)) }}
+- alias: Turn off after wake-up lights
+  id: '3365175229755'
+  trigger:
+  - platform: event
+    event_type: wake_up_lights_start_trigger
+  action:
+  - delay: "02:00:00"
+  - service: light.turn_off
+    target:
+      entity_id:
+        - light.slaapkamer
+        - light.ochtend_lamp
+
